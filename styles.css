@@ -1,0 +1,27 @@
+h1 {
+    text-align: center;
+  }
+
+  #inputSection {
+    text-align: center;
+  }
+
+  li {
+    margin-bottom: 10px;
+  }
+
+  li button {
+    font-size: 8px;
+    margin-left: 20px;
+    color: #666;
+  }
+
+  #main {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50vh auto;
+  }
+
+  #main > div > p {
+    text-align: center;
+  }

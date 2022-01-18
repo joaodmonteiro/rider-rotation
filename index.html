@@ -3,33 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping list example</title>
-    <style>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 
-      h1 {
-        text-align: center;
-      }
+    <title>Rider Rotation</title>
 
-      #inputSection {
-        text-align: center;
-      }
-
-      li {
-        margin-bottom: 10px;
-      }
-
-      li button {
-        font-size: 8px;
-        margin-left: 20px;
-        color: #666;
-      }
-
-      #main {
-        display: grid;
-        grid-template-columns: auto auto;
-        grid-template-rows: 50vh auto;
-      }
-    </style>
   </head>
   <body>
 
@@ -38,7 +16,7 @@
     <div id="inputSection">
       <label for="item">Enter a new rider:</label>
       <input type="text" name="item" id="item">
-      <button>Add Rider</button>
+      <button class="addRiderButton">Add Rider</button>
     </div>
     <div id="main">
       <div>
@@ -58,92 +36,5 @@
         <ul id="onABreak"></ul>
       </div>
     </div>
-    
-
-    
-
-    <script>
-      const availList = document.getElementById('available');
-      const onARideList = document.getElementById('onARide');
-      const onABreakList = document.getElementById('onABreak');
-      const input = document.querySelector('input');
-      const addButton = document.querySelector('button');
-
-      input.focus();
-
-      input.addEventListener("keyup", function(event) {
-        if (event.keyCode === 13) {
-          event.preventDefault();
-          addButton.click();
-        }
-      });
-      
-      addButton.onclick = function() {
-        let newItem = input.value;
-        input.value = '';
-
-        let listItem = document.createElement('li');
-        let span = document.createElement('span');
-        let deleteButton = document.createElement('button');
-        let startButton = document.createElement('button');
-        let breakButton = document.createElement('button');
-
-        
-        span.textContent = newItem;
-        deleteButton.textContent = 'Delete';
-        startButton.textContent = 'Start';
-        breakButton.textContent = 'Break';
-
-        listItem.appendChild(span);
-        listItem.appendChild(deleteButton);
-        listItem.appendChild(startButton);
-        listItem.appendChild(breakButton);
-        availList.appendChild(listItem);
-
-        deleteButton.onclick = function() {
-          deleteButton.parentNode.remove();
-        }
-
-        startButton.onclick = function() {
-          let riderGo = startButton.parentNode;
-          onARideList.appendChild(riderGo);
-          startButton.remove();
-
-          let backButton = document.createElement('button');
-          backButton.textContent = 'Back';
-
-          riderGo.appendChild(backButton);
-
-          backButton.onclick = function() {
-            let riderBack = backButton.parentNode;
-
-            availList.appendChild(riderBack);
-            riderBack.appendChild(startButton);
-            backButton.remove();
-          }
-        }
-
-        breakButton.onclick = function() {
-          onABreakList.appendChild(breakButton.parentNode);
-          startButton.remove();
-
-          let backButton = document.createElement('button');
-          backButton.textContent = 'Back';
-
-          breakButton.parentNode.appendChild(backButton);
-
-          backButton.onclick = function() {
-            let riderBack = backButton.parentNode;
-
-            availList.appendChild(riderBack);
-            riderBack.appendChild(startButton);
-            backButton.remove();
-          }
-        }
-
-        input.focus();
-      }
-
-    </script>
   </body>
 </html>
