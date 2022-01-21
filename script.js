@@ -404,7 +404,7 @@ document.addEventListener('click', function(obj) {
         });
 
         // Submit if 'Enter' is pressed
-        inputName.addEventListener("keyup", function(event) {
+        document.addEventListener("keyup", function(event) {
             if (event.keyCode === 13) {
             event.preventDefault();
             document.querySelector('.addRiderButton').click();
