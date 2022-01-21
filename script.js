@@ -1,14 +1,11 @@
 // HTML elements
-const input = document.querySelector('input');
+// const input = document.querySelector('input');
 const availList = document.getElementById('available');
 const onARideList = document.getElementById('onARide');
 const onABreakList = document.getElementById('onABreak');
-const addRiderButton = document.querySelector('.addRiderButton');
 
 // Array with all the Rider Objects
 let riders = [];
-
-input.focus();
 
 // Rider Factory Function
 const Rider = (name, bikeNumber, id) => {
@@ -73,9 +70,6 @@ function AddRider(riderName, bikeNumber) {
 
     const newRider = Rider(riderName, bikeNumber, uniqueID);
     riders.push(newRider);
-
-    let newItem = input.value;
-    input.value = '';
 
     let listItem = document.createElement('li');
     listItem.id = `li-${uniqueID}`;
@@ -156,20 +150,6 @@ function EndBreak(uniqueID) {
 }
 
 // Input and event listeners
-input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13 && input.value != '') {
-        event.preventDefault();
-        addRiderButton.click();
-    }
-});
-
-
-addRiderButton.onclick = function() {
-
-    AddRider(input.value, '');
-
-    input.focus();
-}
 
 document.addEventListener('click', function(obj) {
 
@@ -228,7 +208,6 @@ document.addEventListener('click', function(obj) {
 
         // Get Rider ID from button's id
         let riderID = obj.target.id.substring(obj.target.id.indexOf('-') +1);
-        console.log(obj.target);
 
         // Get list element and buttons container
         let listElement = document.querySelector(`#li-${riderID}`);
@@ -262,8 +241,6 @@ document.addEventListener('click', function(obj) {
         buttonsContainer.appendChild(startButton);
         buttonsContainer.appendChild(breakButton);
         buttonsContainer.appendChild(deleteButton);
-
-        console.log("oioioi");
     }
     // Break Button
     else if(obj.target.classList.contains('break')) {
@@ -285,7 +262,6 @@ document.addEventListener('click', function(obj) {
 
         //Reset container
         buttonsContainer.innerHTML = "";
-
 
         let startButton = document.createElement('button');
         startButton.classList.add('start');
@@ -355,5 +331,84 @@ document.addEventListener('click', function(obj) {
             rider.toggleDetails();
         }
     }
+    // Click on '+' sign
+    else if(obj.target.classList.contains('addRider')) {
+
+        // Create container(box)
+        let addRiderBoxContainer = document.createElement('div');
+        addRiderBoxContainer.classList.add('addRiderBoxContainer');
+        document.body.appendChild(addRiderBoxContainer);
+
+        // Title
+        let addRiderTitle = document.createElement('p');
+        addRiderTitle.textContent = "New Rider:";
+        addRiderBoxContainer.appendChild(addRiderTitle);
+
+        // Input box for name
+        let inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.placeholder = "Name";
+        inputName.classList.add('inputName');
+        addRiderBoxContainer.appendChild(inputName);
+
+        // Input box for bike number
+        let inputBike = document.createElement('input');
+        inputBike.type = 'text';
+        inputBike.placeholder = "Bike";
+        inputBike.classList.add('inputBike');
+        addRiderBoxContainer.appendChild(inputBike);
+
+        // Submit button
+        let addRiderButton = document.createElement('button');
+        addRiderButton.textContent = "Add rider";
+        addRiderButton.classList.add("addRiderButton");
+        addRiderBoxContainer.appendChild(addRiderButton); 
+
+        inputName.focus();
+
+        // Close window if clicked outside
+        document.addEventListener("click", (evt) => {
+            let targetElement = evt.target; // clicked element
+        
+            do {
+                if (targetElement == addRiderBoxContainer) {
+                    // This is a click inside. Do nothing, just return.
+                    return;
+                }
+                // Go up the DOM
+                targetElement = targetElement.parentNode;
+            } while (targetElement);
+        
+            // This is a click outside.
+            addRiderBoxContainer.remove();
+        });
+
+        // Submit if 'Enter' is pressed
+        inputName.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+            event.preventDefault();
+            document.querySelector('.addRiderButton').click();
+        }
+  });
+        
+    }
+    // click on 'Add rider' button
+    else if(obj.target.classList.contains('addRiderButton')) {
+
+        let addRiderBoxContainer = document.querySelector('.addRiderBoxContainer');
+        let riderName = document.querySelector('.inputName').value;
+        let bikeNumber = document.querySelector('.inputBike').value;
+
+        if(riderName != '') {
+            AddRider(riderName, bikeNumber);
+            addRiderBoxContainer.remove();
+        }
+        else
+            alert("Rider needs a name!");
+
+        console.log(riders);
+    }
 });
+
+
 

@@ -35,10 +35,8 @@ header {
     color: white;
 }
 
-h1 {
-    text-align: center;
-    font-weight: 500;
-    padding: 20px;
+header > h1 {
+  margin-left: 18vw;
 }
 
 .menu {
@@ -83,7 +81,7 @@ li {
 .riderBox {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   width: 100%;
   padding: 5px;
 }
@@ -109,4 +107,32 @@ li {
   height: 15px;
   align-self: center;
 }
+
+.addRiderBoxContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: white;
+  /* border: 3px solid black; */
+  top: 100px;
+  left: 50%;
+  height: 200px;
+  width: 300px;
+  margin-left: -150px;
+  box-shadow: 1px 5px 10px grey;
+}
+
+.addRiderBoxContainer > button {
+  background-color: white;
+  padding: 5px 20px;
+  border: 1px solid black;
+}
+
+.addRider {
+  font-size: 40px;
+  cursor: default;
+}
+
 
