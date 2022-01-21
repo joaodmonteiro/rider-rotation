@@ -1,5 +1,4 @@
 // HTML elements
-// const input = document.querySelector('input');
 const availList = document.getElementById('available');
 const onARideList = document.getElementById('onARide');
 const onABreakList = document.getElementById('onABreak');
@@ -44,24 +43,21 @@ const Rider = (name, bikeNumber, id) => {
 };
 
 // Create some riders
-const joao = AddRider('Joao', 'Z822');
-const maria = AddRider('Maria', 'Z822');
-const rui = AddRider('Rui', 'Z522');
-const fausto = AddRider('Fausto', 'Z830');
-const jose = AddRider('Jose Miguel Sebastiao', 'Z855');
-const ss = AddRider('Jose Miguel Sebastiao', 'Z855');
-const joeese = AddRider('Jose Miguel Sebastiao', 'Z855');
-const jofse = AddRider('Jose Miguel', 'Z855');
-const joase = AddRider('Jose Miguel ', 'Z855');
-const jogse = AddRider('Jose Mebastiao', 'Z855');
-const johse = AddRider('Jose Miastiao', 'Z855');
-const josje = AddRider('Jose Miao', 'Z855');
-const joee22se = AddRider('Jose Miguel Se', 'Z855');
-const joeqqse = AddRider('Jose Miguel Sebastiao', 'Z855');
-const josqqe = AddRider('Jose ', 'Z855');
-
-
-console.log(riders);
+const joao = AddRider('Joao Monteiro', 'Z822');
+const maria = AddRider('Felix Robins', 'Z822');
+const rui = AddRider('Ronny Joao Feliz Garcia', 'Z522');
+const fausto = AddRider('Declan Rooney', 'Z830');
+const jose = AddRider('Rafee Ahmed', 'Z855');
+const ss = AddRider('Mohammed Rahat', 'Z855');
+const joeese = AddRider('Barna Sagodi', 'Z855');
+const jofse = AddRider('Paul Douglas', 'Z855');
+const joase = AddRider('Ali Savas', 'Z855');
+const jogse = AddRider('Joshua Luke Joseph Samuel', 'Z855');
+const johse = AddRider('Monzer Salman', 'Z855');
+const josje = AddRider('Adam Szabo', 'Z855');
+const joee22se = AddRider('Patel Akhilkumar Pareshbhai', 'Z855');
+const joeqqse = AddRider('Taffari Jackson', 'Z855');
+const josqqe = AddRider('JoseZadi David Guede', 'Z855');
 
 function AddRider(riderName, bikeNumber) {
     let uniqueID = 1;
@@ -277,6 +273,27 @@ document.addEventListener('click', function(obj) {
         deleteButton.id = `delete-${riderID}`;
         deleteButton.style.order = '3';
 
+        // Create timer
+        const startingMinutes = 30;
+        let time = startingMinutes * 60;
+
+        let counter = document.createElement('p');
+        counter.textContent = `Time left of break: ${startingMinutes}:00`;
+        counter.classList.add('breakTimer');
+        listElement.appendChild(counter);
+
+        setInterval(updateCountdown, 1000);
+
+        function updateCountdown() {
+            time--;
+            let minutes = Math.floor(time/60);
+            let seconds = time % 60;
+            
+            seconds = seconds < 10 ? seconds = '0' + seconds : seconds;
+
+            counter.textContent = `Time left of break: ${minutes}:${seconds}`;
+        }
+
         buttonsContainer.appendChild(startButton);
         buttonsContainer.appendChild(backButton);
         buttonsContainer.appendChild(deleteButton);
@@ -305,6 +322,9 @@ document.addEventListener('click', function(obj) {
 
         buttonsContainer.appendChild(breakButton);
         breakButton.style.order = '0';
+
+        // Remove break timer
+        document.querySelector('.breakTimer').remove();
 
         obj.target.remove();
     }
