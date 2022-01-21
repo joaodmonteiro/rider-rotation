@@ -285,13 +285,19 @@ document.addEventListener('click', function(obj) {
         setInterval(updateCountdown, 1000);
 
         function updateCountdown() {
-            time--;
-            let minutes = Math.floor(time/60);
-            let seconds = time % 60;
-            
-            seconds = seconds < 10 ? seconds = '0' + seconds : seconds;
+            if(time>0) {
+                time--;
+                let minutes = Math.floor(time/60);
+                let seconds = time % 60;
+                
+                seconds = seconds < 10 ? seconds = '0' + seconds : seconds;
 
-            counter.textContent = `Time left of break: ${minutes}:${seconds}`;
+                counter.textContent = `Time left of break: ${minutes}:${seconds}`;
+
+                if(minutes == 0)
+                    counter.style.color = 'red';
+
+            }  
         }
 
         buttonsContainer.appendChild(startButton);
