@@ -1,28 +1,59 @@
+@font-face {
+  font-family: 'Roboto Flex';
+  src: url('RobotoFlex[GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght].ttf');
+  font-weight: 100 1000;
+font-stretch: 25% 151%;
+}
+
+@font-face {
+  font-family: 'Object Sans';
+  src: url('ObjectSans-Regular.woff2');
+  font-weight: 100 1000;
+font-stretch: 25% 151%;
+}
+
+
 html {  
   margin: 0;
   padding: 0;
-  font-family: arial,sans-serif;
+  font-family: 'Object Sans';
   box-sizing: border-box;
+  background-color: white;
 }
 
 *, *:before, *::after {
   box-sizing: inherit;
   margin: 0;
+  padding: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    color: white;
 }
 
 h1 {
     text-align: center;
+    font-weight: 500;
     padding: 20px;
-  }
+}
+
+.menu {
+  margin-right: 10px;;
+}
 
 #inputSection {
   text-align: center;
+  margin-top: 25px;
 }
 
 
 #main {
   display: grid;
-  grid-template-columns: repeat(3, 33%);
+  grid-template-columns: 50% 50%;
   padding: 20px;
 }
 
@@ -31,31 +62,51 @@ h1 {
 }
 
 ul {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
   margin: 10px;
-  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border-radius: 10px;
+  max-width: 50vw;
 }
 
 li {
+  margin: 3px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 10px;
   border: 1px solid black;
-  padding: 5px;
   list-style-type: none;
+  cursor: grab;
+}
+
+.riderBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  padding: 5px;
 }
 
 .buttonsContainer {
   display: flex;
-  justify-content: space-around;
-  width: 200px;
+  justify-content: flex-end;
+  padding-left: 20px;
 }
 
 .buttonsContainer > button {
-  padding: 2px 10px;
+  padding: 2px 5px;
   margin: 0;
+  border: transparent;
+  background-color: white;
+  cursor: pointer;
+}
+
+.break {
+  background-image: url(images/break-icon-1.2.svg);
+  background-size: 15px 15px;
+  width: 15px;
+  height: 15px;
+  align-self: center;
 }
 
