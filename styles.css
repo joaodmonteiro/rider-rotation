@@ -1,13 +1,20 @@
 @font-face {
   font-family: 'Roboto Flex';
-  src: url('RobotoFlex[GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght].ttf');
+  src: url('fonts/RobotoFlex[GRAD\,XOPQ\,XTRA\,YOPQ\,YTAS\,YTDE\,YTFI\,YTLC\,YTUC\,opsz\,slnt\,wdth\,wght].ttf');
   font-weight: 100 1000;
 font-stretch: 25% 151%;
 }
 
 @font-face {
   font-family: 'Object Sans';
-  src: url('ObjectSans-Regular.woff2');
+  src: url('fonts/ObjectSans-Regular.woff2');
+  font-weight: 100 1000;
+font-stretch: 25% 151%;
+}
+
+@font-face {
+  font-family: 'Object Sans Bold';
+  src: url('fonts/ObjectSans-Bold.woff2');
   font-weight: 100 1000;
 font-stretch: 25% 151%;
 }
@@ -29,10 +36,44 @@ html {
 
 header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: black;
-    color: white;
+    justify-content: start;
+    background-color: white;
+    color: black;
+    font-size: 27px;
+}
+
+.logo {
+  margin-left: 20px;
+}
+
+.titleRotation {
+  margin-left: 20px;
+  font-family: 'Object Sans';
+}
+
+.plusBox {
+  display: flex;
+  font-size: 50px;
+  cursor: default;
+  margin-left: 20px;
+  margin-top: -4px;
+  border: 2px solid black;
+  height: 22px;
+  width: 22px;
+}
+
+.plus {
+  width: 12px;
+  height: 12px;
+  margin-left: 3px;
+  margin-top: 3px;
+}
+
+.menuIcon {
+  margin-right: 25px;
+  cursor: default;
+  margin-left: auto;
 }
 
 #main {
@@ -43,6 +84,7 @@ header {
 
 #main > div > p {
   text-align: center;
+  font-size: 22px;
 }
 
 ul {
@@ -116,11 +158,33 @@ li {
   border: 1px solid black;
 }
 
-.addRider {
-  font-size: 50px;
-  cursor: default;
-  margin-right: 20px;
-  margin-top: 10px;
+.bikeInfoBox {
+  display: grid;
+  grid-template-columns: 100px 150px auto;
+  padding-top: 10px;
+  padding-left: 10px;
+  /* margin-top: 5px;
+  margin-left: 5px; */
+  border-bottom: 1px solid black;
+  
 }
 
+.menuBox {
+  background-color: black;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 33vw;
+  height: 100vh;
+  right: 0px;
+  top: 0px;
+  border: 1px solid black;
+}
+
+.closeMenu {
+  width: 30px;
+  align-self: flex-end;
+  margin-top: 20px;
+  margin-right: 20px;
+}
 
