@@ -420,11 +420,26 @@ document.addEventListener('click', function(obj) {
         addRiderBoxContainer.appendChild(inputName);
 
         // Input box for bike number
+        let dropDownMenuBikes = document.createElement('div');
+        dropDownMenuBikes.classList.add('dropdown');
+        let dropDownMenuBikesContent = document.createElement('div');
+        dropDownMenuBikesContent.classList.add('dropdown-content');
         let inputBike = document.createElement('input');
         inputBike.type = 'text';
         inputBike.placeholder = "Bike";
         inputBike.classList.add('inputBike');
-        addRiderBoxContainer.appendChild(inputBike);
+
+        // Include all bikes
+        bikes.forEach( function(b) {
+            let bikeForSelection = document.createElement('p');
+            bikeForSelection.textContent = b.number;
+            dropDownMenuBikesContent.appendChild(bikeForSelection);
+        });
+
+        dropDownMenuBikes.appendChild(inputBike);
+        dropDownMenuBikes.appendChild(dropDownMenuBikesContent);
+
+        addRiderBoxContainer.appendChild(dropDownMenuBikes);
 
         // Submit button
         let addRiderButton = document.createElement('button');
@@ -482,6 +497,7 @@ let menuButton = document.querySelector('.menuIcon');
 
 menuButton.addEventListener('click', function() {
     console.log("menuuu");
+
     let menuBox = document.createElement('div');
     menuBox.classList.add('menuBox');
     document.body.appendChild(menuBox);
@@ -491,8 +507,17 @@ menuButton.addEventListener('click', function() {
     closeMenu.classList.add('closeMenu');
     menuBox.appendChild(closeMenu);
 
+    let bikesTabButton =document.createElement('a');
+    bikesTabButton.href = "bikes.html";
+    bikesTabButton.textContent = "BIKES";
+    menuBox.appendChild(bikesTabButton);
+
     closeMenu.addEventListener('click', function() {
         menuBox.remove();
+    });
+
+    bikesTabButton.addEventListener('click', function() {
+
     });
 });
 
