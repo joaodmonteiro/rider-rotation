@@ -507,8 +507,11 @@ menuButton.addEventListener('click', function() {
     closeMenu.classList.add('closeMenu');
     menuBox.appendChild(closeMenu);
 
+    let rotationTabButton =document.createElement('a');
+    rotationTabButton.textContent = "ROTATION";
+    menuBox.appendChild(rotationTabButton);
+
     let bikesTabButton =document.createElement('a');
-    bikesTabButton.href = "bikes.html";
     bikesTabButton.textContent = "BIKES";
     menuBox.appendChild(bikesTabButton);
 
@@ -516,8 +519,46 @@ menuButton.addEventListener('click', function() {
         menuBox.remove();
     });
 
+    rotationTabButton.addEventListener('click', function() {
+
+        menuBox.remove();
+
+        document.querySelector('.bikesContainer').style.display = "none";
+        
+        document.querySelector('#main').style.display = "grid";
+
+    });
+
     bikesTabButton.addEventListener('click', function() {
 
+        menuBox.remove();
+
+        document.querySelector('#main').style.display = "none";
+
+        let bikesContainer = document.querySelector('.bikesContainer');
+        bikesContainer.style.display = "inherit";
+
+        bikes.forEach(function(bike) {
+            let bikeInfoBox = document.createElement('div');
+            bikeInfoBox.classList.add('bikeInfoBox');
+
+            let bikeID = document.createElement('p');
+            bikeID.textContent = bike.number;
+
+            let bikeModel = document.createElement('p');
+            bikeModel.textContent = bike.model;
+
+            let bikeStatus = document.createElement('p');
+            bikeStatus.textContent = bike.bikeStatus;
+
+            console.log(bike.number);
+
+            bikeInfoBox.appendChild(bikeID);
+            bikeInfoBox.appendChild(bikeModel);
+            bikeInfoBox.appendChild(bikeStatus);
+
+            bikesContainer.appendChild(bikeInfoBox);
+        });
     });
 });
 
