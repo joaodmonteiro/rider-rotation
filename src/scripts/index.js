@@ -1,5 +1,22 @@
 import '../styles.css';
 import menuX from '../images/X.svg';
+import gorillasLogo from '../images/logo.jpeg';
+import plusSign from '../images/plus.svg';
+
+// Insert logo on the header
+const logo = new Image();
+logo.src = gorillasLogo;
+
+document.querySelector('.logo').appendChild(logo);
+
+logo.style.height = "80px";
+
+// Insert plus sign 
+const plus = new Image();
+plus.src = plusSign;
+plus.classList.add('plus');
+
+document.querySelector('.plusBox').appendChild(plus);
 
 // HTML elements
 const availList = document.getElementById('available');
