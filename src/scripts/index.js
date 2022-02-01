@@ -2,6 +2,7 @@ import '../styles.css';
 import menuX from '../images/X.svg';
 import gorillasLogo from '../images/logo.jpeg';
 import plusSign from '../images/plus.svg';
+import { bikes, loadBikesPage } from './bikesPage-load';
 
 // Insert logo on the header
 const logo = new Image();
@@ -9,7 +10,8 @@ logo.src = gorillasLogo;
 
 document.querySelector('.logo').appendChild(logo);
 
-logo.style.height = "80px";
+logo.style.maxWidth = "150px";
+logo.style.height = "auto";
 
 // Insert plus sign 
 const plus = new Image();
@@ -26,26 +28,26 @@ const onABreakList = document.getElementById('onABreak');
 // Array with all the Rider Objects
 let riders = [];
 
-// Array for bikes
-let bikes = [];
+// Array with available riders
+let ridersAvailable = [];
 
-// Bike Factory Function
-const Bike = (number, model, status) => {
-    let bikeStatus = status;
+// Array with riders on a ride
+let ridersOnARide = [];
 
-    const changeStatus = (newStatus) => {
-        bikeStatus = newStatus;
-    }
-
-    return {number, model, bikeStatus, changeStatus}
-};
+// Array with riders on break
+let ridersOnBreak = [];
 
 // Rider Factory Function
-const Rider = (name, bikeNumber, id) => {
+const Rider = (name, bikeNumber, riderID) => {
     let onARide = false;
     let onBreak = false;
     let bike = bikeNumber;
     let detailsShowing = false;
+    let breakStartTime;
+    let breakEndTime;
+    let hadBreak = false;
+    const getHadBreak = () => hadBreak;
+    const getBreakEndTime = () => breakEndTime;
     const isOnARide = () => onARide;
     const isOnBreak = () => onBreak;
     const areDetailsShowing = () => detailsShowing;
@@ -60,9 +62,12 @@ const Rider = (name, bikeNumber, id) => {
     const toggleOnBreak = () => {
         if(onBreak) {
             onBreak = false;
+            hadBreak = true;
         }
-        else {
+        else if(!hadBreak) {
             onBreak = true;
+            let now = new Date();
+            setBreakStartTime(now);
         }
     }
     const toggleDetails = () => {
@@ -73,142 +78,480 @@ const Rider = (name, bikeNumber, id) => {
             detailsShowing = true;
         }
     }
-    return {name, bike, id, isOnARide, isOnBreak, areDetailsShowing, toggleOnARide, toggleOnBreak, toggleDetails}
+    const setBreakStartTime = (time) => {
+        breakEndTime = time;
+        breakEndTime.setMinutes(breakEndTime.getMinutes() + 30);
+        // breakEndTime.setSeconds(breakEndTime.getSeconds() + 5);
+    }
+    const changeBike = (newBike) => {
+        bike = newBike;
+    }
+    return {name, bike, riderID, isOnARide, isOnBreak, areDetailsShowing, getBreakEndTime, getHadBreak, toggleOnARide, toggleOnBreak, toggleDetails, changeBike}
 };
 
 // Create some riders
-const joao = AddRider('Joao Monteiro', 'Z822');
-const maria = AddRider('Felix Robins', 'Z822');
-const rui = AddRider('Ronny Joao Feliz Garcia', 'Z522');
-const fausto = AddRider('Declan Rooney', 'Z830');
-const jose = AddRider('Rafee Ahmed', 'Z855');
-const ss = AddRider('Mohammed Rahat', 'Z855');
-const joeese = AddRider('Barna Sagodi', 'Z855');
-const jofse = AddRider('Paul Douglas', 'Z855');
-const joase = AddRider('Ali Savas', 'Z855');
-const jogse = AddRider('Joshua Luke Joseph Samuel', 'Z855');
-const johse = AddRider('Monzer Salman', 'Z855');
-const josje = AddRider('Adam Szabo', 'Z855');
-const joee22se = AddRider('Patel Akhilkumar Pareshbhai', 'Z855');
-const joeqqse = AddRider('Taffari Jackson', 'Z855');
-const josqqe = AddRider('JoseZadi David Guede', 'Z855');
+// const joao = AddRider('Joao Monteiro', 'Z822');
+// const maria = AddRider('Felix Robins', 'Z822');
+// const rui = AddRider('Ronny Joao Feliz Garcia', 'Z522');
+// const fausto = AddRider('Declan Rooney', 'Z830');
+// const jose = AddRider('Rafee Ahmed', 'Z855');
+// const ss = AddRider('Mohammed Rahat', 'Z855');
+// const joeese = AddRider('Barna Sagodi', 'Z855');
+// const jofse = AddRider('Paul Douglas', 'Z855');
+// const joase = AddRider('Ali Savas', 'Z855');
+// const jogse = AddRider('Joshua Luke Joseph Samuel', 'Z855');
+// const johse = AddRider('Monzer Salman', 'Z855');
+// const josje = AddRider('Adam Szabo', 'Z855');
+// const joee22se = AddRider('Patel Akhilkumar Pareshbhai', 'Z855');
+// const joeqqse = AddRider('Taffari Jackson', 'Z855');
+// const josqqe = AddRider('JoseZadi David Guede', 'Z855');
 
-// Create some bikes
-const M900 = Bike("M900", "Zoomo Zero", "Out of Action");
-const Z895456 = Bike("Z895456", "Zoomo Zero", "In Action");
-const Z895488 = Bike("Z895488", "Zoomo Zero", "Out of Action");
-const Z895490 = Bike("Z895490", "Zoomo Zero", "In Action");
-const Z895493 = Bike("Z895493", "Zoomo Zero", "In Action");
-const Z896360 = Bike("Z896360", "Zoomo Zero", "In Action");
-const Z896699 = Bike("Z896699", "Zoomo Zero", "In Action");
-const Z897530 = Bike("Z897530", "Zoomo Zero", "In Action");
-const Z897531 = Bike("Z897531", "Zoomo Zero", "In Action");
-const Z897556 = Bike("Z897556", "Zoomo Zero", "In Action");
-const Z897643 = Bike("Z897643", "Zoomo Zero", "In Action");
-const Z897677 = Bike("Z897677", "Zoomo Zero", "In Action");
-const Z897798 = Bike("Z897798", "Zoomo Zero", "In Action");
-const Z897832 = Bike("Z897832", "Zoomo Zero", "In Action");
-const Z898055 = Bike("Z898055", "Zoomo Zero", "Out of Action");
-const Z898202 = Bike("Z898202", "Zoomo Zero", "In Action");
-const Z898242 = Bike("Z898242", "Zoomo Zero", "In Action");
-const Z898281 = Bike("Z898281", "Zoomo Zero", "In Action");
-const Z898477 = Bike("Z898477", "Zoomo Zero", "In Action");
-const Z899317 = Bike("Z899317", "Zoomo Zero", "In Action");
+// Clear local storage
+// localStorage.clear();
+document.querySelector('.logo').onclick = function() { localStorage.clear() };
 
-bikes.push(M900, Z895456, Z895488, Z895490, Z895493, Z896360, Z896699,
-    Z897530, Z897531, Z897556, Z897643, Z897677, Z897798, Z897832,
-    Z898055, Z898202, Z898242, Z898281, Z898477, Z899317);
+// Set array lenghts to 0
+if(!localStorage.getItem('ridersLength')) {
+    localStorage.setItem("ridersLength", 0);
+}
 
-console.log(bikes);
+if(!localStorage.getItem('ridersAvailableLength')) {
+    localStorage.setItem("ridersAvailableLength", 0);
+}
 
+if(!localStorage.getItem('ridersOnARideLength')) {
+    localStorage.setItem("ridersOnARideLength", 0);
+}
+
+if(!localStorage.getItem('ridersOnBreakLength')) {
+    localStorage.setItem("ridersOnBreakLength", 0);
+}
+
+importFromLocalStorage();
+
+console.log("riders:");
+console.log(riders);
+console.log("ridersAvailable:");
+console.log(ridersAvailable);
+console.log("ridersOnARide:");
+console.log(ridersOnARide);
+console.log("ridersOnBreak:");
+console.log(ridersOnBreak);
+console.log(localStorage);
+
+// Retrieve info from localstorage
+
+function importFromLocalStorage() {
+    for(let i = 0; i < localStorage.getItem('ridersLength'); i++)
+    {
+        let importedObject= JSON.parse(localStorage.getItem(`riders[${i}]`));
+        let importedRider = Rider(importedObject.name, importedObject.bike, importedObject.riderID);
+        
+        riders.push(importedRider);
+        ridersAvailable.push(importedRider.riderID);
+        listRider(importedRider);
+    }
+
+    // for(let i = 0; i < localStorage.getItem('ridersAvailableLength'); i++)
+    // {
+    //     ridersAvailable.push(localStorage.getItem(`ridersAvailable[${i}]`));
+    // }
+
+    // for(let i = 0; i < localStorage.getItem('ridersOnARideLength'); i++)
+    // {
+    //     ridersOnARide.push(localStorage.getItem(`ridersOnARide[${i}]`));
+    // }
+
+    // for(let i = 0; i < localStorage.getItem('ridersOnBreakLength'); i++)
+    // {
+    //     ridersOnBreak.push(localStorage.getItem(`ridersOnBreak[${i}]`));
+    // }
+
+    refreshRiderRotation();
+}
+
+// Update local storage
+function updateLocalStorage() {
+
+    // Clear local storage
+    localStorage.clear();
+
+    // Save riders array and length of array
+    localStorage.setItem("ridersLength", riders.length);
+
+    riders.forEach( function(rider) {
+        localStorage.setItem(`riders[${riders.indexOf(rider)}]`, JSON.stringify(rider));
+    });
+
+    // Save riders available array and length of array
+    localStorage.setItem("ridersAvailableLength", ridersAvailable.length);
+
+    ridersAvailable.forEach( function(riderID) {
+        localStorage.setItem(`ridersAvailable[${ridersAvailable.indexOf(riderID)}]`, riderID);
+    });
+
+    // Save riders on a ride array and length of array
+    localStorage.setItem("ridersOnARideLength", ridersOnARide.length);
+
+    ridersOnARide.forEach( function(riderID) {
+        localStorage.setItem(`ridersOnARide[${ridersOnARide.indexOf(riderID)}]`, riderID);
+    });
+
+    // Save riders on break array and length of array
+    localStorage.setItem("ridersOnBreakLength", ridersOnBreak.length);
+
+    ridersOnBreak.forEach( function(riderID) {
+        localStorage.setItem(`ridersOnBreak[${ridersOnBreak.indexOf(riderID)}]`, riderID);
+    });
+}
+
+// refreshRiderRotation();
 function AddRider(riderName, bikeNumber) {
+
     let uniqueID = 1;
     if(riders.length > 0)
-        uniqueID = riders[riders.length - 1].id + 1;
+        uniqueID = +riders[riders.length - 1].riderID + 1;
 
+    uniqueID = uniqueID.toString();
     const newRider = Rider(riderName, bikeNumber, uniqueID);
     riders.push(newRider);
+    ridersAvailable.push(uniqueID);
 
-    let listItem = document.createElement('li');
-    listItem.id = `li-${uniqueID}`;
-    let riderBox = document.createElement('div');
-    riderBox.classList.add('riderBox');
-    let span = document.createElement('span');
-    span.classList.add('riderNameBox');
-    span.id = `nameBox-${uniqueID}`;
-    let buttonsContainer = document.createElement('div');
-    buttonsContainer.classList.add('buttonsContainer');
-    let deleteButton = document.createElement('button');
-    deleteButton.classList.add('delete');
-    deleteButton.id = `delete-${uniqueID}`;
-    let startButton = document.createElement('button');
-    startButton.classList.add('start');
-    startButton.id = `start-${uniqueID}`;
-    let breakButton = document.createElement('button');
-    breakButton.classList.add('break');
-    breakButton.id = `break-${uniqueID}`;
+    // List Rider
+    listRider(newRider);
 
+    updateLocalStorage();
 
-    span.textContent = newRider.name;
-    deleteButton.textContent = 'X';
-    startButton.textContent = 'Go';
+    // localStorage.setItem(`riders[${localStorage.ridersLength}]`, JSON.stringify(newRider));
+    // localStorage.setItem(`ridersAvailable[${localStorage.ridersAvailableLength}]`, JSON.stringify(newRider));
 
-    riderBox.appendChild(span);
-    buttonsContainer.appendChild(startButton);
-    buttonsContainer.appendChild(breakButton);
-    buttonsContainer.appendChild(deleteButton);
-    deleteButton.style.order = '3';
-    
-    riderBox.appendChild(buttonsContainer);
+    // localStorage.ridersLength = +localStorage.ridersLength + 1;
+    // localStorage.ridersAvailableLength = +localStorage.ridersAvailableLength + 1;
 
-    listItem.appendChild(riderBox);
-    
-    availList.appendChild(listItem);
+    console.log("riders:");
+    console.log(riders);
+    console.log("ridersAvailable:");
+    console.log(ridersAvailable);
+    console.log("ridersOnARide:");
+    console.log(ridersOnARide);
+    console.log("ridersOnBreak:");
+    console.log(ridersOnBreak);
+    console.log(localStorage);
 }
 
 function DeleteRider(uniqueID) {
+    // Find rider to delete through ID
     let riderToDelete = riders.find(function(r) {
-        return r.id == uniqueID;
+        return r.riderID == uniqueID;
     });
 
-    riders.splice(riders.indexOf(riderToDelete), 1);
+    // Remove rider from one of the rotation arrays
+    if(riderToDelete.isOnARide()) {
+        ridersOnARide.splice(ridersOnARide.indexOf(uniqueID), 1);
+    }
+    else if(riderToDelete.isOnBreak()) {
+        ridersOnBreak.splice(ridersOnBreak.indexOf(uniqueID), 1);
+    }
+    else {
+        ridersAvailable.splice(ridersAvailable.indexOf(uniqueID), 1);
+    }
+
+    // Remove from main array
+    let indexToDelete = riders.indexOf(riderToDelete);
+    riders.splice(indexToDelete, 1);
+
+    console.log("riders:");
     console.log(riders);
+    console.log("ridersAvailable:");
+    console.log(ridersAvailable);
+    console.log("ridersOnARide:");
+    console.log(ridersOnARide);
+    console.log("ridersOnBreak:");
+    console.log(ridersOnBreak);
+    console.log(localStorage);
+
+    //Refresh rotation
+    refreshRiderRotation();
+
+    // Update local storage
+    updateLocalStorage();
 }
 
 function StartRide(uniqueID) {
-    let riderToStart = riders.find(function(r) {
-        return r.id == uniqueID;
+    let rider = riders.find(function(r) {
+        return r.riderID == uniqueID;
     });
 
-    riderToStart.toggleOnARide();
+    if(rider.isOnBreak()) {
+
+        rider.toggleOnBreak();
+
+        ridersOnBreak.splice(ridersOnBreak.indexOf(uniqueID), 1);
+    }
+    else {
+        ridersAvailable.splice(ridersAvailable.indexOf(uniqueID), 1);
+    }
+        
+    rider.toggleOnARide();
+    
+    //Insert rider in on a ride array
+    ridersOnARide.push(uniqueID);
+
+    console.log("riders:");
+    console.log(riders);
+    console.log("ridersAvailable:");
+    console.log(ridersAvailable);
+    console.log("ridersOnARide:");
+    console.log(ridersOnARide);
+    console.log("ridersOnBreak:");
+    console.log(ridersOnBreak);
+    console.log(localStorage);
+
+    refreshRiderRotation();
+
+    updateLocalStorage();
 }
 
 function EndRide(uniqueID) {
-    let riderBack = riders.find(function(r) {
-        return r.id == uniqueID;
+    let rider = riders.find(function(r) {
+        return r.riderID == uniqueID;
     });
 
-    riderBack.toggleOnARide();
+    rider.toggleOnARide();
+
+    // Remove rider from On a ride array
+    ridersOnARide.splice(ridersOnARide.indexOf(uniqueID), 1);
+
+    // Insert rider on available array
+    ridersAvailable.push(uniqueID);
+
+    console.log("riders:");
+    console.log(riders);
+    console.log("ridersAvailable:");
+    console.log(ridersAvailable);
+    console.log("ridersOnARide:");
+    console.log(ridersOnARide);
+    console.log("ridersOnBreak:");
+    console.log(ridersOnBreak);
+    console.log(localStorage);
+
+    refreshRiderRotation();
+
+    updateLocalStorage();
 }
 
 function GoOnBreak(uniqueID) {
-    let riderForBreak = riders.find(function(r) {
-        return r.id == uniqueID;
+    let rider = riders.find(function(r) {
+        return r.riderID == uniqueID;
     });
 
-    riderForBreak.toggleOnBreak();
+    if(!rider.getHadBreak()) {
+        if(rider.isOnARide()) {
+            rider.toggleOnARide();
+            ridersOnARide.splice(ridersOnARide.indexOf(uniqueID), 1);
+            
+        }
+        else {
+            ridersAvailable.splice(ridersAvailable.indexOf(uniqueID), 1);
+        }
+            
+        rider.toggleOnBreak();
+    
+        ridersOnBreak.push(uniqueID);
+    
+        refreshRiderRotation();
+
+        updateLocalStorage();
+    
+        console.log(ridersAvailable);
+        console.log(ridersOnARide);
+        console.log(ridersOnBreak);
+    }
 }
 
 function EndBreak(uniqueID) {
-    let riderBackFromBreak = riders.find(function(r) {
-        return r.id == uniqueID;
+    let rider = riders.find(function(r) {
+        return r.riderID == uniqueID;
     });
 
-    riderBackFromBreak.toggleOnBreak();
+    rider.toggleOnBreak();
+    ridersOnBreak.splice(ridersOnBreak.indexOf(uniqueID), 1);
+
+    ridersAvailable.push(uniqueID);
+    refreshRiderRotation();
+
+    updateLocalStorage();
 }
 
-// Input and event listeners
+// Refresh Rider Rotation page
+function refreshRiderRotation() {
+    availList.innerHTML = "";
+    onARideList.innerHTML = "";
+    onABreakList.innerHTML = "";
 
+    ridersAvailable.forEach( function(id) {
+        let rider = riders.find(function(r) {
+            return r.riderID == id;
+        });
+        listRider(rider);
+    });
+
+    ridersOnARide.forEach( function(id) {
+        let rider = riders.find(function(r) {
+            return r.riderID == id;
+        });
+        listRider(rider);
+    });
+
+    ridersOnBreak.forEach( function(id) {
+        let rider = riders.find(function(r) {
+            return r.riderID == id;
+        });
+        listRider(rider);
+    });
+}
+
+// Create rider list item
+function listRider(rider) {
+
+    let listItem = document.createElement('li');
+    listItem.id = `li-${rider.riderID}`;
+
+    let riderBox = document.createElement('div');
+    riderBox.classList.add('riderBox');
+
+    let span = document.createElement('span');
+    span.classList.add('riderNameBox');
+    span.id = `nameBox-${rider.riderID}`;
+    span.textContent = rider.name;
+
+    riderBox.appendChild(span);
+
+    let buttonsContainer = document.createElement('div');
+    buttonsContainer.classList.add('buttonsContainer');
+
+    if(rider.isOnARide()) {
+        let backButton = document.createElement('button');
+        backButton.classList.add('back');
+        backButton.textContent = 'Back';
+        backButton.id = `breakEnd-${rider.riderID}`;
+
+        let breakButton = document.createElement('button');
+        breakButton.classList.add('break');
+        breakButton.id = `break-${rider.riderID}`;
+        if(rider.getHadBreak())
+            breakButton.style.opacity = "0.3";
+
+        let deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete');
+        deleteButton.textContent = 'X';
+        deleteButton.id = `delete-${rider.riderID}`;
+        deleteButton.style.order = '3';
+
+        buttonsContainer.appendChild(backButton);
+        buttonsContainer.appendChild(breakButton);
+        buttonsContainer.appendChild(deleteButton);
+
+        riderBox.appendChild(buttonsContainer);
+        listItem.appendChild(riderBox);
+        onARideList.appendChild(listItem);
+    }
+    else if(rider.isOnBreak()) {
+        let startButton = document.createElement('button');
+        startButton.classList.add('start');
+        startButton.textContent = 'Go';
+        startButton.id = `start-${rider.riderID}`;
+
+        let backButton = document.createElement('button');
+        backButton.classList.add('backFromBreak');
+        backButton.textContent = 'Back';
+        backButton.id = `breakEnd-${rider.riderID}`;
+
+        let deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete');
+        deleteButton.textContent = 'X';
+        deleteButton.id = `delete-${rider.riderID}`;
+        deleteButton.style.order = '3';
+
+        // Create timer
+        let counter = document.createElement('p');
+        counter.classList.add('breakTimer');
+
+        let timeNow = new Date();
+        let totalSecondsLeft = (rider.getBreakEndTime().getTime() - timeNow.getTime()) / 1000;
+        let secondsLeft = Math.floor(totalSecondsLeft % 60);
+        let minutesLeft = Math.floor(totalSecondsLeft / 60);
+        counter.textContent = `Time left of break: ${minutesLeft}:${secondsLeft}`;
+
+        
+        let intervalFunction = setInterval(function() {
+            if(!rider.getHadBreak())
+                updateCountdown();
+        }, 1000);
+
+        function updateCountdown() {
+            let timeNow = new Date();
+            let totalSecondsLeft = (rider.getBreakEndTime().getTime() - timeNow.getTime()) / 1000;
+            let secondsLeft = Math.floor(totalSecondsLeft % 60);
+            let minutesLeft = Math.floor(totalSecondsLeft / 60);
+            if(secondsLeft<10)
+                counter.textContent = `Time left of break: ${minutesLeft}:0${secondsLeft}`;
+            else
+                counter.textContent = `Time left of break: ${minutesLeft}:${secondsLeft}`;
+            if(minutesLeft <= 1)
+                counter.style.color = 'red';
+            
+            if(minutesLeft <= 0 && secondsLeft <= 0) {
+                alert(`${rider.name} has finished his break!`);
+                EndBreak(rider.riderID);
+                clearInterval(intervalFunction);
+            }    
+        }
+
+        buttonsContainer.appendChild(startButton);
+        buttonsContainer.appendChild(backButton);
+        buttonsContainer.appendChild(deleteButton);
+
+        riderBox.appendChild(buttonsContainer);
+        listItem.appendChild(riderBox);
+        listItem.appendChild(counter);
+        onABreakList.appendChild(listItem);
+    }
+    else {
+        let deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete');
+        deleteButton.id = `delete-${rider.riderID}`;
+        deleteButton.textContent = 'X';
+    
+        let startButton = document.createElement('button');
+        startButton.classList.add('start');
+        startButton.id = `start-${rider.riderID}`;
+        startButton.textContent = 'Go';
+    
+        let breakButton = document.createElement('button');
+        breakButton.classList.add('break');
+        breakButton.id = `break-${rider.riderID}`;
+
+        if(rider.getHadBreak())
+            breakButton.style.opacity = "0.3";
+    
+        buttonsContainer.appendChild(startButton);
+        buttonsContainer.appendChild(breakButton);
+        buttonsContainer.appendChild(deleteButton);
+        deleteButton.style.order = '3';
+        
+        riderBox.appendChild(buttonsContainer);
+    
+        listItem.appendChild(riderBox);
+        
+        availList.appendChild(listItem);
+    }
+    
+}
+
+// Save to localStorage
+
+// Input and event listeners
 document.addEventListener('click', function(obj) {
 
     // START Button
@@ -217,38 +560,8 @@ document.addEventListener('click', function(obj) {
         // Get Rider ID from button's id
         let riderID = obj.target.id.substring(obj.target.id.indexOf('-') +1);
 
-        // Get list element and buttons container
-        let listElement = document.querySelector(`#li-${riderID}`);
-        let buttonsContainer = obj.target.parentNode;
-
-        // Move rider to 'On a Ride' List
-        onARideList.appendChild(listElement);
-
         // Call Start Ride function
-        StartRide(riderID);
-
-        // -------Change buttons-----------
-
-        //Reset container
-        buttonsContainer.innerHTML = "";
-
-
-        let backButton = document.createElement('button');
-        backButton.classList.add('back');
-        backButton.textContent = 'Back';
-        backButton.id = `breakEnd-${riderID}`;
-        let breakButton = document.createElement('button');
-        breakButton.classList.add('break');
-        breakButton.id = `break-${riderID}`;
-        let deleteButton = document.createElement('button');
-        deleteButton.classList.add('delete');
-        deleteButton.textContent = 'X';
-        deleteButton.id = `delete-${riderID}`;
-        deleteButton.style.order = '3';
-
-        buttonsContainer.appendChild(backButton);
-        buttonsContainer.appendChild(breakButton);
-        buttonsContainer.appendChild(deleteButton);
+        StartRide(riderID); 
     }
     // Delete Button
     else if(obj.target.classList.contains('delete')) {
@@ -258,8 +571,8 @@ document.addEventListener('click', function(obj) {
         DeleteRider(riderID);
 
         // Get list element and buttons container
-        let listElement = document.querySelector(`#li-${riderID}`);
-        listElement.remove();
+        // let listElement = document.querySelector(`#li-${riderID}`);
+        // listElement.remove();
     }
     // Back Button
     else if(obj.target.classList.contains('back')) {
@@ -267,38 +580,8 @@ document.addEventListener('click', function(obj) {
         // Get Rider ID from button's id
         let riderID = obj.target.id.substring(obj.target.id.indexOf('-') +1);
 
-        // Get list element and buttons container
-        let listElement = document.querySelector(`#li-${riderID}`);
-        let buttonsContainer = obj.target.parentNode;
-
-        // Move rider to 'Available Riders' list
-        availList.appendChild(listElement);
-
         // Call End Ride function
         EndRide(riderID);
-
-        // -------Change buttons-----------
-
-        //Reset container
-        buttonsContainer.innerHTML = "";
-
-
-        let startButton = document.createElement('button');
-        startButton.classList.add('start');
-        startButton.textContent = 'Go';
-        startButton.id = `start-${riderID}`;
-        let breakButton = document.createElement('button');
-        breakButton.classList.add('break');
-        breakButton.id = `break-${riderID}`;
-        let deleteButton = document.createElement('button');
-        deleteButton.classList.add('delete');
-        deleteButton.textContent = 'X';
-        deleteButton.id = `delete-${riderID}`;
-        deleteButton.style.order = '3';
-
-        buttonsContainer.appendChild(startButton);
-        buttonsContainer.appendChild(breakButton);
-        buttonsContainer.appendChild(deleteButton);
     }
     // Break Button
     else if(obj.target.classList.contains('break')) {
@@ -306,66 +589,8 @@ document.addEventListener('click', function(obj) {
         // Get Rider ID from button's id
         let riderID = obj.target.id.substring(obj.target.id.indexOf('-') +1);
 
-        // Get list element and buttons container
-        let listElement = document.querySelector(`#li-${riderID}`);
-        let buttonsContainer = obj.target.parentNode;
-
-        // Move rider to 'Break' list
-        onABreakList.appendChild(listElement);
-
         // Call Go On Break function
         GoOnBreak(riderID);
-
-        // -------Change buttons-----------
-
-        //Reset container
-        buttonsContainer.innerHTML = "";
-
-        let startButton = document.createElement('button');
-        startButton.classList.add('start');
-        startButton.textContent = 'Go';
-        startButton.id = `start-${riderID}`;
-        let backButton = document.createElement('button');
-        backButton.classList.add('backFromBreak');
-        backButton.textContent = 'Back';
-        backButton.id = `breakEnd-${riderID}`;
-        let deleteButton = document.createElement('button');
-        deleteButton.classList.add('delete');
-        deleteButton.textContent = 'X';
-        deleteButton.id = `delete-${riderID}`;
-        deleteButton.style.order = '3';
-
-        // Create timer
-        const startingMinutes = 30;
-        let time = startingMinutes * 60;
-
-        let counter = document.createElement('p');
-        counter.textContent = `Time left of break: ${startingMinutes}:00`;
-        counter.classList.add('breakTimer');
-        listElement.appendChild(counter);
-
-        setInterval(updateCountdown, 1000);
-
-        function updateCountdown() {
-            if(time>0) {
-                time--;
-                let minutes = Math.floor(time/60);
-                let seconds = time % 60;
-                
-                seconds = seconds < 10 ? seconds = '0' + seconds : seconds;
-
-                counter.textContent = `Time left of break: ${minutes}:${seconds}`;
-
-                if(minutes == 0)
-                    counter.style.color = 'red';
-
-            }  
-        }
-
-        buttonsContainer.appendChild(startButton);
-        buttonsContainer.appendChild(backButton);
-        buttonsContainer.appendChild(deleteButton);
-
     }
     // Back from break button
     else if(obj.target.classList.contains('backFromBreak')) {
@@ -373,28 +598,8 @@ document.addEventListener('click', function(obj) {
         // Get Rider ID from button's id
         let riderID = obj.target.id.substring(obj.target.id.indexOf('-') +1);
 
-        // Get list element and buttons container
-        let listElement = document.querySelector(`#li-${riderID}`);
-        let buttonsContainer = obj.target.parentNode;
-
-        // Move rider to 'Available' list
-        availList.appendChild(listElement);
-
         // Call End Break function
         EndBreak(riderID);
-
-        // Change back button to break button
-        let breakButton = document.createElement('button');
-        breakButton.classList.add('break');
-        breakButton.id = `break-${riderID}`;
-
-        buttonsContainer.appendChild(breakButton);
-        breakButton.style.order = '0';
-
-        // Remove break timer
-        document.querySelector('.breakTimer').remove();
-
-        obj.target.remove();
     }
     // Click on rider
     else if(obj.target.classList.contains('riderNameBox')) {
@@ -403,14 +608,14 @@ document.addEventListener('click', function(obj) {
         let riderID = obj.target.id.substring(obj.target.id.indexOf('-') +1);
 
         let rider = riders.find(function(r) {
-            return r.id == riderID;
+            return r.riderID == riderID;
         });
 
         if(!rider.areDetailsShowing()) {
             let riderDetails = document.createElement('div');
             riderDetails.classList.add('riderDetails');
             riderDetails.textContent = `Bike number: ${rider.bike}`;
-            document.querySelector(`#li-${rider.id}`).appendChild(riderDetails);
+            document.querySelector(`#li-${rider.riderID}`).appendChild(riderDetails);
             rider.toggleDetails();
             
         }
@@ -440,24 +645,17 @@ document.addEventListener('click', function(obj) {
         addRiderBoxContainer.appendChild(inputName);
 
         // Input box for bike number
-        let dropDownMenuBikes = document.createElement('div');
-        dropDownMenuBikes.classList.add('dropdown');
-        let dropDownMenuBikesContent = document.createElement('div');
-        dropDownMenuBikesContent.classList.add('dropdown-content');
-        let inputBike = document.createElement('input');
-        inputBike.type = 'text';
-        inputBike.placeholder = "Bike";
-        inputBike.classList.add('inputBike');
+        let dropDownMenuBikes = document.createElement('select');
+        dropDownMenuBikes.innerHTML = `<option value="" disabled selected>Bike</option>`;
+        dropDownMenuBikes.classList.add('dropdownBikeSelector');
+        dropDownMenuBikes.name = "bikes"
 
         // Include all bikes
         bikes.forEach( function(b) {
-            let bikeForSelection = document.createElement('p');
+            let bikeForSelection = document.createElement('option');
             bikeForSelection.textContent = b.number;
-            dropDownMenuBikesContent.appendChild(bikeForSelection);
+            dropDownMenuBikes.appendChild(bikeForSelection);
         });
-
-        dropDownMenuBikes.appendChild(inputBike);
-        dropDownMenuBikes.appendChild(dropDownMenuBikesContent);
 
         addRiderBoxContainer.appendChild(dropDownMenuBikes);
 
@@ -500,7 +698,7 @@ document.addEventListener('click', function(obj) {
 
         let addRiderBoxContainer = document.querySelector('.addRiderBoxContainer');
         let riderName = document.querySelector('.inputName').value;
-        let bikeNumber = document.querySelector('.inputBike').value;
+        let bikeNumber = document.querySelector('.dropdownBikeSelector').value;
 
         if(riderName != '') {
             AddRider(riderName, bikeNumber);
@@ -508,8 +706,6 @@ document.addEventListener('click', function(obj) {
         }
         else
             alert("Rider needs a name!");
-
-        console.log(riders);
     }
 });
 
@@ -535,10 +731,12 @@ menuButton.addEventListener('click', function() {
     bikesTabButton.textContent = "BIKES";
     menuBox.appendChild(bikesTabButton);
 
+    // Close Menu
     closeMenu.addEventListener('click', function() {
         menuBox.remove();
     });
 
+    // Open Rider Rotation page
     rotationTabButton.addEventListener('click', function() {
 
         menuBox.remove();
@@ -547,40 +745,52 @@ menuButton.addEventListener('click', function() {
         
         document.querySelector('#main').style.display = "grid";
 
+        document.querySelector('.pageTitle').textContent = "RIDER ROTATION";
+
+        document.querySelector('.plusBox').style.display = "flex";
+
     });
 
+    // Open Bikes page
     bikesTabButton.addEventListener('click', function() {
 
         menuBox.remove();
 
-        document.querySelector('#main').style.display = "none";
-
-        let bikesContainer = document.querySelector('.bikesContainer');
-        bikesContainer.style.display = "inherit";
-
-        bikes.forEach(function(bike) {
-            let bikeInfoBox = document.createElement('div');
-            bikeInfoBox.classList.add('bikeInfoBox');
-
-            let bikeID = document.createElement('p');
-            bikeID.textContent = bike.number;
-
-            let bikeModel = document.createElement('p');
-            bikeModel.textContent = bike.model;
-
-            let bikeStatus = document.createElement('p');
-            bikeStatus.textContent = bike.bikeStatus;
-
-            console.log(bike.number);
-
-            bikeInfoBox.appendChild(bikeID);
-            bikeInfoBox.appendChild(bikeModel);
-            bikeInfoBox.appendChild(bikeStatus);
-
-            bikesContainer.appendChild(bikeInfoBox);
-        });
+        loadBikesPage();
     });
 });
 
 
+function storageAvailable(type) {
+    var storage;
+    try {
+        storage = window[type];
+        var x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            (storage && storage.length !== 0);
+    }
+}
 
+// if (storageAvailable('localStorage')) {
+//     // Yippee! We can use localStorage awesomeness
+//     console.log('yes');
+//   }
+//   else {
+//     // Too bad, no localStorage for us
+//     console.log('no');
+//   }
