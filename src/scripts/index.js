@@ -82,8 +82,8 @@ const Rider = (name, bikeNumber, riderID) => {
     const setBreakEndTime = (time) => {
         breakStartTime = time;
         breakEndTime = time;
-        // breakEndTime.setMinutes(breakStartTime.getMinutes() + 30);
-        breakEndTime.setSeconds(breakStartTime.getSeconds() + 60);
+        breakEndTime.setMinutes(breakStartTime.getMinutes() + 30);
+        // breakEndTime.setSeconds(breakStartTime.getSeconds() + 60);
     }
     const changeBike = (newBike) => {
         bike = newBike;
