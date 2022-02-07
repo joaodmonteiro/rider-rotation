@@ -2,7 +2,8 @@ import '../styles.css';
 import menuX from '../images/X.svg';
 import gorillasLogo from '../images/logo.jpeg';
 import plusSign from '../images/plus.svg';
-import { bikes, loadBikesPage } from './bikesPage-load';
+import { bikes, loadBikesPage } from './bikes';
+import { importRider, updateLocalStorage } from './storage';
 
 // Insert logo on the header
 const logo = new Image();
@@ -67,7 +68,7 @@ const Rider = (name, bikeNumber, riderID) => {
         else if(!hadBreak) {
             onBreak = true;
             let now = new Date();
-            setBreakStartTime(now);
+            setBreakEndTime(now);
         }
     }
     const toggleDetails = () => {
@@ -78,10 +79,11 @@ const Rider = (name, bikeNumber, riderID) => {
             detailsShowing = true;
         }
     }
-    const setBreakStartTime = (time) => {
+    const setBreakEndTime = (time) => {
+        breakStartTime = time;
         breakEndTime = time;
-        breakEndTime.setMinutes(breakEndTime.getMinutes() + 30);
-        // breakEndTime.setSeconds(breakEndTime.getSeconds() + 5);
+        // breakEndTime.setMinutes(breakStartTime.getMinutes() + 30);
+        breakEndTime.setSeconds(breakStartTime.getSeconds() + 60);
     }
     const changeBike = (newBike) => {
         bike = newBike;
@@ -89,123 +91,22 @@ const Rider = (name, bikeNumber, riderID) => {
     return {name, bike, riderID, isOnARide, isOnBreak, areDetailsShowing, getBreakEndTime, getHadBreak, toggleOnARide, toggleOnBreak, toggleDetails, changeBike}
 };
 
-// Create some riders
-// const joao = AddRider('Joao Monteiro', 'Z822');
-// const maria = AddRider('Felix Robins', 'Z822');
-// const rui = AddRider('Ronny Joao Feliz Garcia', 'Z522');
-// const fausto = AddRider('Declan Rooney', 'Z830');
-// const jose = AddRider('Rafee Ahmed', 'Z855');
-// const ss = AddRider('Mohammed Rahat', 'Z855');
-// const joeese = AddRider('Barna Sagodi', 'Z855');
-// const jofse = AddRider('Paul Douglas', 'Z855');
-// const joase = AddRider('Ali Savas', 'Z855');
-// const jogse = AddRider('Joshua Luke Joseph Samuel', 'Z855');
-// const johse = AddRider('Monzer Salman', 'Z855');
-// const josje = AddRider('Adam Szabo', 'Z855');
-// const joee22se = AddRider('Patel Akhilkumar Pareshbhai', 'Z855');
-// const joeqqse = AddRider('Taffari Jackson', 'Z855');
-// const josqqe = AddRider('JoseZadi David Guede', 'Z855');
-
-// Clear local storage
 // localStorage.clear();
-document.querySelector('.logo').onclick = function() { localStorage.clear() };
-
-// Set array lenghts to 0
-if(!localStorage.getItem('ridersLength')) {
-    localStorage.setItem("ridersLength", 0);
-}
-
-if(!localStorage.getItem('ridersAvailableLength')) {
-    localStorage.setItem("ridersAvailableLength", 0);
-}
-
-if(!localStorage.getItem('ridersOnARideLength')) {
-    localStorage.setItem("ridersOnARideLength", 0);
-}
-
-if(!localStorage.getItem('ridersOnBreakLength')) {
-    localStorage.setItem("ridersOnBreakLength", 0);
-}
-
-importFromLocalStorage();
-
-console.log("riders:");
-console.log(riders);
-console.log("ridersAvailable:");
-console.log(ridersAvailable);
-console.log("ridersOnARide:");
-console.log(ridersOnARide);
-console.log("ridersOnBreak:");
-console.log(ridersOnBreak);
-console.log(localStorage);
 
 // Retrieve info from localstorage
+for(let i = 0; i < localStorage.getItem('ridersLength'); i++)
+{
+    let importedObject = importRider(i);
 
-function importFromLocalStorage() {
-    for(let i = 0; i < localStorage.getItem('ridersLength'); i++)
-    {
-        let importedObject= JSON.parse(localStorage.getItem(`riders[${i}]`));
-        let importedRider = Rider(importedObject.name, importedObject.bike, importedObject.riderID);
-        
-        riders.push(importedRider);
-        ridersAvailable.push(importedRider.riderID);
-        listRider(importedRider);
-    }
+    let importedRider = Rider(importedObject.name, importedObject.bike, importedObject.riderID);
 
-    // for(let i = 0; i < localStorage.getItem('ridersAvailableLength'); i++)
-    // {
-    //     ridersAvailable.push(localStorage.getItem(`ridersAvailable[${i}]`));
-    // }
-
-    // for(let i = 0; i < localStorage.getItem('ridersOnARideLength'); i++)
-    // {
-    //     ridersOnARide.push(localStorage.getItem(`ridersOnARide[${i}]`));
-    // }
-
-    // for(let i = 0; i < localStorage.getItem('ridersOnBreakLength'); i++)
-    // {
-    //     ridersOnBreak.push(localStorage.getItem(`ridersOnBreak[${i}]`));
-    // }
-
-    refreshRiderRotation();
+    riders.push(importedRider);
+    ridersAvailable.push(importedRider.riderID);
+    listRider(importedRider);
 }
 
-// Update local storage
-function updateLocalStorage() {
+refreshRiderRotation();
 
-    // Clear local storage
-    localStorage.clear();
-
-    // Save riders array and length of array
-    localStorage.setItem("ridersLength", riders.length);
-
-    riders.forEach( function(rider) {
-        localStorage.setItem(`riders[${riders.indexOf(rider)}]`, JSON.stringify(rider));
-    });
-
-    // Save riders available array and length of array
-    localStorage.setItem("ridersAvailableLength", ridersAvailable.length);
-
-    ridersAvailable.forEach( function(riderID) {
-        localStorage.setItem(`ridersAvailable[${ridersAvailable.indexOf(riderID)}]`, riderID);
-    });
-
-    // Save riders on a ride array and length of array
-    localStorage.setItem("ridersOnARideLength", ridersOnARide.length);
-
-    ridersOnARide.forEach( function(riderID) {
-        localStorage.setItem(`ridersOnARide[${ridersOnARide.indexOf(riderID)}]`, riderID);
-    });
-
-    // Save riders on break array and length of array
-    localStorage.setItem("ridersOnBreakLength", ridersOnBreak.length);
-
-    ridersOnBreak.forEach( function(riderID) {
-        localStorage.setItem(`ridersOnBreak[${ridersOnBreak.indexOf(riderID)}]`, riderID);
-    });
-}
-
-// refreshRiderRotation();
 function AddRider(riderName, bikeNumber) {
 
     let uniqueID = 1;
@@ -476,45 +377,36 @@ function listRider(rider) {
         // Create timer
         let counter = document.createElement('p');
         counter.classList.add('breakTimer');
+        counter.id = `breakTimer-${rider.id}`;
 
         let timeNow = new Date();
         let totalSecondsLeft = (rider.getBreakEndTime().getTime() - timeNow.getTime()) / 1000;
         let secondsLeft = Math.floor(totalSecondsLeft % 60);
         let minutesLeft = Math.floor(totalSecondsLeft / 60);
-        counter.textContent = `Time left of break: ${minutesLeft}:${secondsLeft}`;
+        counter.textContent = `${minutesLeft}:0${secondsLeft}`;
 
-        
+        let timerCircle = document.createElement('div');
+        timerCircle.classList.add('timer-circle');
+        timerCircle.style = `--duration: ${totalSecondsLeft};--size: 30;`;
+        let circleMask = document.createElement('div');
+        circleMask.classList.add('mask');
+
         let intervalFunction = setInterval(function() {
             if(!rider.getHadBreak())
-                updateCountdown();
+                updateCountdown(rider);
         }, 1000);
-
-        function updateCountdown() {
-            let timeNow = new Date();
-            let totalSecondsLeft = (rider.getBreakEndTime().getTime() - timeNow.getTime()) / 1000;
-            let secondsLeft = Math.floor(totalSecondsLeft % 60);
-            let minutesLeft = Math.floor(totalSecondsLeft / 60);
-            if(secondsLeft<10)
-                counter.textContent = `Time left of break: ${minutesLeft}:0${secondsLeft}`;
-            else
-                counter.textContent = `Time left of break: ${minutesLeft}:${secondsLeft}`;
-            if(minutesLeft <= 1)
-                counter.style.color = 'red';
-            
-            if(minutesLeft <= 0 && secondsLeft <= 0) {
-                alert(`${rider.name} has finished his break!`);
-                EndBreak(rider.riderID);
-                clearInterval(intervalFunction);
-            }    
-        }
-
+        
         buttonsContainer.appendChild(startButton);
         buttonsContainer.appendChild(backButton);
         buttonsContainer.appendChild(deleteButton);
 
         riderBox.appendChild(buttonsContainer);
         listItem.appendChild(riderBox);
+        timerCircle.appendChild(circleMask);
+        listItem.appendChild(timerCircle);
         listItem.appendChild(counter);
+
+        // listItem.appendChild(counter);
         onABreakList.appendChild(listItem);
     }
     else {
@@ -549,8 +441,6 @@ function listRider(rider) {
     
 }
 
-// Save to localStorage
-
 // Input and event listeners
 document.addEventListener('click', function(obj) {
 
@@ -566,13 +456,12 @@ document.addEventListener('click', function(obj) {
     // Delete Button
     else if(obj.target.classList.contains('delete')) {
 
+        // Get Rider ID from button's id
         let riderID = obj.target.id.substring(obj.target.id.indexOf('-') +1);
 
+        // Call Delete RIder function
         DeleteRider(riderID);
 
-        // Get list element and buttons container
-        // let listElement = document.querySelector(`#li-${riderID}`);
-        // listElement.remove();
     }
     // Back Button
     else if(obj.target.classList.contains('back')) {
@@ -716,30 +605,55 @@ menuButton.addEventListener('click', function() {
 
     let menuBox = document.createElement('div');
     menuBox.classList.add('menuBox');
-    document.body.appendChild(menuBox);
+    
 
     let closeMenu = new Image();
     closeMenu.src = menuX;
     closeMenu.classList.add('closeMenu');
     menuBox.appendChild(closeMenu);
 
-    let rotationTabButton =document.createElement('a');
+    let rotationTabButton = document.createElement('a');
     rotationTabButton.textContent = "ROTATION";
+    rotationTabButton.classList.add('menu-tab');
     menuBox.appendChild(rotationTabButton);
 
-    let bikesTabButton =document.createElement('a');
+    
+    let ridersTabButton = document.createElement('a');
+    ridersTabButton.textContent = "RIDERS";
+    ridersTabButton.classList.add('menu-tab');
+    menuBox.appendChild(ridersTabButton);
+
+    let ridersTabContainer = document.createElement('div');
+    ridersTabContainer.classList.add('riders-tab-container');
+    ridersTabButton.appendChild(ridersTabContainer);
+
+    let bikesTabButton = document.createElement('a');
     bikesTabButton.textContent = "BIKES";
+    bikesTabButton.classList.add('menu-tab');
     menuBox.appendChild(bikesTabButton);
 
+    document.body.appendChild(menuBox);
+
+    setTimeout( function() {
+        menuBox.classList.add('opened');
+    }, 10);
+    
     // Close Menu
     closeMenu.addEventListener('click', function() {
-        menuBox.remove();
+        menuBox.classList.add('closed');
+        setTimeout( function() {
+            menuBox.remove();
+        }, 200);
+        
     });
 
     // Open Rider Rotation page
     rotationTabButton.addEventListener('click', function() {
 
-        menuBox.remove();
+        menuBox.classList.add('closed');
+        setTimeout( function() {
+            menuBox.remove();
+        }, 200);
 
         document.querySelector('.bikesContainer').style.display = "none";
         
@@ -751,10 +665,30 @@ menuButton.addEventListener('click', function() {
 
     });
 
+    ridersTabButton.addEventListener('click', function() {
+        if(!ridersTabContainer.classList.contains('opened')) {
+            ridersTabContainer.classList.add('opened');
+
+            riders.forEach( function(rider) {
+                let riderListing = document.createElement('a');
+                riderListing.textContent = rider.name;
+                ridersTabContainer.appendChild(riderListing);
+            });
+        }
+        else {
+            ridersTabContainer.classList.remove('opened');
+            ridersTabContainer.innerHTML = '';
+        }
+        
+    });
+
     // Open Bikes page
     bikesTabButton.addEventListener('click', function() {
 
-        menuBox.remove();
+        menuBox.classList.add('closed');
+        setTimeout( function() {
+            menuBox.remove();
+        }, 200);
 
         loadBikesPage();
     });
@@ -786,6 +720,27 @@ function storageAvailable(type) {
     }
 }
 
+function updateCountdown(rider) {
+    let timeNow = new Date();
+    let totalSecondsLeft = (rider.getBreakEndTime().getTime() - timeNow.getTime()) / 1000;
+    let secondsLeft = Math.floor(totalSecondsLeft % 60);
+    let minutesLeft = Math.floor(totalSecondsLeft / 60);
+    let counter = document.querySelector(`#breakTimer-${rider.id}`);
+
+    if(secondsLeft<10)
+        counter.textContent = `${minutesLeft}:0${secondsLeft}`;
+    else
+        counter.textContent = `${minutesLeft}:${secondsLeft}`;
+    if(minutesLeft <= 1)
+        counter.style.color = 'red';
+    
+    if(minutesLeft <= 0 && secondsLeft <= 0) {
+        alert(`${rider.name} has finished his break!`);
+        EndBreak(rider.riderID);
+        // clearInterval(intervalFunction);
+    }    
+}
+
 // if (storageAvailable('localStorage')) {
 //     // Yippee! We can use localStorage awesomeness
 //     console.log('yes');
@@ -794,3 +749,5 @@ function storageAvailable(type) {
 //     // Too bad, no localStorage for us
 //     console.log('no');
 //   }
+
+export { riders, ridersAvailable, ridersOnARide, ridersOnBreak };

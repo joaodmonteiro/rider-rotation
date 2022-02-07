@@ -39,7 +39,7 @@ header {
     justify-content: space-between;
     background-color: white;
     color: black;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 
 .logo {
@@ -91,7 +91,7 @@ ul {
   margin: 10px;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  /* align-items: center; */
   border-radius: 10px;
   max-width: 50vw;
 }
@@ -101,9 +101,12 @@ li {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: start;
   border: 1px solid black;
   list-style-type: none;
   cursor: pointer;
+  height: 100%;
+  padding:  6px 6px 2px 6px;
 }
 
 .riderBox {
@@ -111,7 +114,11 @@ li {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 5px;
+  /* padding: 5px; */
+}
+
+.riderDetails {
+  /* padding: 5px; */
 }
 
 .buttonsContainer {
@@ -143,13 +150,13 @@ li {
   align-items: center;
   justify-content: space-evenly;
   background-color: white;
-  /* border: 3px solid black; */
-  top: 100px;
+  border: 10px solid black;
+  top: calc(50vh - 100px);
   left: 50%;
   min-height: 200px;
   width: 300px;
   margin-left: -150px;
-  box-shadow: 1px 5px 10px grey;
+  box-shadow: 4px 4px 12px 0px grey;
 }
 
 .addRiderBoxContainer > button {
@@ -175,11 +182,6 @@ li {
   justify-self: end;
 }
 
-.breakTimer {
-  align-self: flex-start;
-  margin-left: 10px;
-}
-
 .menuBox {
   background-color: black;
   position: fixed;
@@ -188,12 +190,22 @@ li {
   width: 33vw;
   height: 100vh;
   top: 0;
-  right: 0;
+  right: -33vw;
   border: 1px solid black;
   color: white;
-  font-size: 34px;
+  font-size: 2.3rem;
   padding: 20px;
+  transition: transform 300ms ease-in-out;
 }
+
+.menuBox.opened {
+  transform: translate(-33vw, 0);
+}
+
+.menuBox.closed {
+  transform: translate(33vw, 0);
+}
+
 
 .menuBox > * {
   text-decoration: none;
@@ -203,10 +215,78 @@ li {
 }
 
 .closeMenu {
-  width: 30px;
+  width: 25px;
   align-self: flex-end;
 }
 
 .bikesContainer {
   margin: 20px 30px;
+}
+
+.riders-tab-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-tab {
+  font-size: 2.2rem;
+  margin-left: .5rem;
+  padding-top: 6px;
+}
+
+.riders-tab-container > * {
+  margin-left: 1rem;
+  padding-top: 1rem;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.breakTimer {
+  position: relative;
+  top: -19px;
+  font-size: .7rem;
+}
+
+.timer-circle {
+  background: -webkit-linear-gradient(left, skyBlue 50%, #eee 50%);
+  border-radius: 100%;
+  height: calc(var(--size) * 1px);
+  width: calc(var(--size) * 1px);
+  position: relative;
+  -webkit-animation: time calc(var(--duration) * 1s) steps(1000, start) infinite;
+    -webkit-mask: radial-gradient(transparent 50%,#000 50%);
+    mask: radial-gradient(transparent 50%,#000 50%);
+}
+.mask {
+  border-radius: 100% 0 0 100% / 50% 0 0 50%;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 50%;
+  -webkit-animation: mask calc(var(--duration) * 1s) steps(500, start) infinite;
+  -webkit-transform-origin: 100% 50%;
+}
+@-webkit-keyframes time {
+  100% {
+      -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes mask {
+  0% {
+      background: #eee;
+      -webkit-transform: rotate(0deg);
+  }
+  50% {
+      background: #eee;
+      -webkit-transform: rotate(-180deg);
+  }
+  50.01% {
+      background: skyBlue;
+      -webkit-transform: rotate(0deg);
+  }
+  100% {
+      background: skyBlue;
+      -webkit-transform: rotate(-180deg);
+  }
 }
