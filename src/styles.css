@@ -19,6 +19,12 @@ font-stretch: 25% 151%;
   font-stretch: 25% 151%;
 }
 
+:root {
+  --fs-big: clamp(1.4rem, 1.8vw, 8rem);
+  --fs-normal: clamp(1.2rem, 1.4vw, 5rem);
+  --fs-small: clamp(1rem, 1vw, 3rem);
+}
+
 *, *:before, *::after {
   box-sizing: inherit;
   margin: 0;
@@ -31,82 +37,270 @@ html {
   font-family: 'Object Sans';
   box-sizing: border-box;
   background-color: white;
+  height: 100vh;
 }
 
 header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: white;
-    color: black;
-    font-size: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2vw 1vw;
+}
+
+ul {
+  list-style: none;
+}
+
+li a {
+  text-decoration: none;
+}
+
+body {
+  display: flex;
+  background-color: rgba(246, 245, 245, 1);
+}
+
+input[type='name'] {
+  background-color: rgba(239, 243, 244, 1);
+  border: none;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05);
+  height: 2em;
+  border-radius: 6px;
+}
+
+button{
+  padding: 5px 20px;
+  cursor: pointer;
+}
+
+.menu {
+  width: 15vw;
+  min-height: 100vh;
+  border-top-right-radius: 1vw;
+  background-color: white;
+}
+
+.logoContainer {
+  display: grid;
+  place-items: center;
+  padding: 1em;
+}
+
+.logoContainer > img {
+  width: 100%;
+}
+
+.menu > ul {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin-top: 1em;
+  gap: .8em;
+  max-height: 500px;
+}
+
+.menu > ul > li {
+  flex-shrink: 0;
+}
+
+#ridersButtonListItem {
+  flex: 1 0 auto;
+}
+
+.navLink {
+  color: rgba(88, 88, 88, 1);
+  font-size: var(--fs-big);
+  cursor: pointer;
+  margin-left: 1em;
 }
 
 .logo {
-  margin-left: 20px;
+  margin-left: 10px;
+}
+
+.selected-tab {
+  color: black;
+}
+
+.navListContainer {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 64vh;
+  max-width: 100%;
+  background-color: rgba(246, 245, 245, 1);
+  margin: .3em .6em;
+  border-radius: 8px;
+  overflow-x: hidden;
+}
+
+.navListContainer > * {
+  margin: 0;
+  padding: .6em 1em .4em 1em;
+  border-bottom: 1px solid rgba(234, 234, 234, 1);
+  font-size: var(--fs-small);
+}
+
+.see-all-button {
+  cursor: pointer;
+  text-align: center;
+}
+
+.menu-rider-listing {
+  display: flex;
+  justify-content: space-between;
+}
+
+.main {
+  display: grid;
+  width: 85vw;
+  height: 100vh;
+  grid-template-rows: 1fr 6fr;
 }
 
 .pageTitle {
-  margin-left: 20px;
   font-family: 'Object Sans';
 }
 
-.plusBox {
+.new-rider-button {
+  display: flex;
+  width: auto;
+  padding: 1em 1.5em;
+  gap: .5em;
+  border-radius: 8px;
+}
+
+.new-rider-button > div {
+  white-space: nowrap;
+}
+
+.addNewButton{
   display: flex;
   font-size: 50px;
   cursor: pointer;
-  margin-left: 30px;
-  margin-top: -4px;
-  border: 2px solid black;
-  height: 22px;
-  width: 22px;
+  width: 3em;
+  height: 1em;
+  background-color: rgba(80, 160, 255, 1);
+  border-radius: .2em;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 .3em;
 }
 
-.plus {
-  width: 12px;
-  height: 12px;
-  margin-left: 3px;
+.addNewButton > div {
+  color: white;
+  font-size: var(--fs-normal);
   margin-top: 3px;
 }
 
-.menuIcon {
-  margin-right: 25px;
-  cursor: pointer;
-  margin-left: auto;
+.plus {
+  width: 14px;
+  height: 14px;
 }
 
-#main {
+.contentRiders {
   display: grid;
-  justify-content: end;
-  grid-template-columns: 50% 50%;
-  /* padding: 20px; */
+  grid-template-columns: repeat(3, 1fr);
+  padding-left: 1em;
+  max-height: 100%;
 }
 
-#main > div > p {
+.contentRiders > div > h2 {
+  font-size: var(--fs-normal);
+  color: rgba(85, 85, 85, 1);
+  text-align: center;
+  padding-right: 1em;
+}
+
+.contentRiders > div > ul {
+  list-style: none;
+  padding: .5em 1em 0 0;
+  height: 82vh;
+  overflow-y: scroll;
+}
+
+.contentRiders > div > ul > li {
+  display: flex;
+  background-color: white;
+  margin-bottom: .5em;
+  height: 2em;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1em;
+  border-radius: .4em;
+}
+
+.options-button {
+  cursor: pointer;
+  width: 20px;
+  text-align: center;
+}
+
+.options-container {
+  position: absolute;
+  border: 1px solid rgba(234, 234, 234, 1);
+  background-color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.options-container > *:not(:last-child) {
+  border-bottom: 1px solid rgba(234, 234, 234, 1);
+}
+
+.options-container > li {
+  padding: 12px 12px 8px 12px;
+}
+
+.options-container > li:hover {
+  background-color: rgba(234, 234, 234, 1);
+}
+
+.contentRotation {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 75% 25%;
+  max-width: 100%;
+  max-height: 100%;
+  padding-left: 1vw;
+}
+
+.contentRotation > div {
+  background-color: white;
+  border-radius: 1vw;
+  padding: 2vw 1vw;
+  margin: 0 1vw 1vw 0;
+}
+
+#onABreakSection {
+  grid-column: 1 / 3;
+}
+
+.contentRotation > div > p {
   text-align: center;
   font-size: 22px;
 }
 
-ul {
+.rotationList {
   margin: 10px;
   display: flex;
   flex-wrap: wrap;
-  /* align-items: center; */
-  border-radius: 10px;
-  max-width: 50vw;
 }
 
-li {
-  margin: 3px;
+.rotationList > li {
+  margin: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  border: 1px solid black;
+  background-color: rgb(245, 243, 243);
+  border-radius: 6px;
   list-style-type: none;
   cursor: pointer;
   height: 100%;
   padding:  6px 6px 2px 6px;
+  font-size: 1.4rem;
+  border: 1px solid rgba(234, 234, 234, 1);
 }
 
 .riderBox {
@@ -131,7 +325,7 @@ li {
   padding: 2px 5px;
   margin: 0;
   border: transparent;
-  background-color: white;
+  background-color: rgb(245, 243, 243);
   cursor: pointer;
 }
 
@@ -143,30 +337,65 @@ li {
   align-self: baseline;
 }
 
+.modal-background {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.14);
+}
+
 .addRiderBoxContainer {
   position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-evenly;
   background-color: white;
-  border: 10px solid black;
   top: calc(50vh - 100px);
   left: 50%;
-  min-height: 200px;
-  width: 300px;
-  margin-left: -150px;
-  box-shadow: 4px 4px 12px 0px grey;
+  width: 360px;
+  margin-left: -180px;
+  box-shadow: 0 4px 30px 0px rgba(0, 0, 0, 0.05);
+  border-radius: 18px;
+  padding: 1.4em;
+}
+.addRiderBoxContainer > h2 {
+  text-align: center;
+  margin-bottom: .5em;
 }
 
-.addRiderBoxContainer > button {
+.addRiderBoxContainer > label {
+  font-size: var(--fs-small);
+}
+.modal-buttons-container {
+  display: flex;
+  justify-content: end;
+  gap: .5em;
+}
+
+.primary-button {
+  background-color: rgba(80, 160, 255, 1);
+  color: white;
+  border: none;
+}
+
+.secondary-button {
   background-color: white;
-  padding: 5px 20px;
-  border: 1px solid black;
+  border: 1px solid rgba(118, 118, 118, 1);
+  color: rgba(123, 121, 121, 1);
 }
 
-.dropdownBikeSelector {
-  width: 150px;
+.checkbox-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.5em 0;
+}
+
+.checkbox-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .bikeVisibleInfo {
@@ -182,63 +411,14 @@ li {
   justify-self: end;
 }
 
-.menuBox {
-  background-color: black;
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  width: 33vw;
-  height: 100vh;
-  top: 0;
-  right: -33vw;
-  border: 1px solid black;
-  color: white;
-  font-size: 2.3rem;
-  padding: 20px;
-  transition: transform 300ms ease-in-out;
-}
-
-.menuBox.opened {
-  transform: translate(-33vw, 0);
-}
-
-.menuBox.closed {
-  transform: translate(33vw, 0);
-}
-
-
-.menuBox > * {
-  text-decoration: none;
-  color: white;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.closeMenu {
-  width: 25px;
-  align-self: flex-end;
-}
-
 .bikesContainer {
   margin: 20px 30px;
-}
-
-.riders-tab-container {
-  display: flex;
-  flex-direction: column;
 }
 
 .menu-tab {
   font-size: 2.2rem;
   margin-left: .5rem;
   padding-top: 6px;
-}
-
-.riders-tab-container > * {
-  margin-left: 1rem;
-  padding-top: 1rem;
-  font-size: 1rem;
-  text-decoration: none;
 }
 
 .breakTimer {

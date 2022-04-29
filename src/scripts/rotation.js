@@ -1,0 +1,433 @@
+import { riders } from "./riders";
+import { updateLocalStorage } from "./storage";
+
+// Array with available riders
+let ridersAvailable = [];
+
+// Array with riders on a ride
+let ridersOnARide = [];
+
+// Array with riders on break
+let ridersOnBreak = [];
+
+function addRiderToRotation(id) {
+  ridersAvailable.push(id);
+
+  refreshRiderRotation();
+  // updateLocalStorage();
+
+  console.log("riders:");
+  console.log(riders);
+  console.log("ridersAvailable:");
+  console.log(ridersAvailable);
+  console.log("ridersOnARide:");
+  console.log(ridersOnARide);
+  console.log("ridersOnBreak:");
+  console.log(ridersOnBreak);
+  console.log(localStorage);
+}
+
+function DeleteRiderFromRotation(uniqueID) {
+  // Find rider to delete through ID
+  let riderToDelete = riders.find(function (r) {
+    return r.id == uniqueID;
+  });
+
+  // Remove rider from one of the rotation arrays
+  if (riderToDelete.isOnARide()) {
+    ridersOnARide.splice(ridersOnARide.indexOf(uniqueID), 1);
+  } else if (riderToDelete.isOnBreak()) {
+    ridersOnBreak.splice(ridersOnBreak.indexOf(uniqueID), 1);
+  } else {
+    ridersAvailable.splice(ridersAvailable.indexOf(uniqueID), 1);
+  }
+
+  //Refresh rotation
+  refreshRiderRotation();
+
+  // Update local storage
+  updateLocalStorage();
+}
+
+function StartRide(uniqueID) {
+  let rider = riders.find(function (r) {
+    return r.id == uniqueID;
+  });
+
+  if (rider.isOnBreak()) {
+    rider.toggleOnBreak();
+
+    ridersOnBreak.splice(ridersOnBreak.indexOf(uniqueID), 1);
+  } else {
+    ridersAvailable.splice(ridersAvailable.indexOf(uniqueID), 1);
+  }
+
+  rider.toggleOnARide();
+
+  //Insert rider in on a ride array
+  ridersOnARide.push(uniqueID);
+
+  console.log("riders:");
+  console.log(riders);
+  console.log("ridersAvailable:");
+  console.log(ridersAvailable);
+  console.log("ridersOnARide:");
+  console.log(ridersOnARide);
+  console.log("ridersOnBreak:");
+  console.log(ridersOnBreak);
+  console.log(localStorage);
+
+  refreshRiderRotation();
+
+  updateLocalStorage();
+}
+
+function EndRide(uniqueID) {
+  let rider = riders.find(function (r) {
+    return r.id == uniqueID;
+  });
+
+  rider.toggleOnARide();
+
+  // Remove rider from On a ride array
+  ridersOnARide.splice(ridersOnARide.indexOf(uniqueID), 1);
+
+  // Insert rider on available array
+  ridersAvailable.push(uniqueID);
+
+  console.log("riders:");
+  console.log(riders);
+  console.log("ridersAvailable:");
+  console.log(ridersAvailable);
+  console.log("ridersOnARide:");
+  console.log(ridersOnARide);
+  console.log("ridersOnBreak:");
+  console.log(ridersOnBreak);
+  console.log(localStorage);
+
+  refreshRiderRotation();
+
+  updateLocalStorage();
+}
+
+function GoOnBreak(uniqueID) {
+  let rider = riders.find(function (r) {
+    return r.id == uniqueID;
+  });
+
+  if (!rider.getHadBreak()) {
+    if (rider.isOnARide()) {
+      rider.toggleOnARide();
+      ridersOnARide.splice(ridersOnARide.indexOf(uniqueID), 1);
+    } else {
+      ridersAvailable.splice(ridersAvailable.indexOf(uniqueID), 1);
+    }
+
+    rider.toggleOnBreak();
+
+    ridersOnBreak.push(uniqueID);
+
+    console.log(ridersAvailable);
+    console.log(ridersOnARide);
+    console.log(ridersOnBreak);
+    console.log(rider.isOnBreak());
+
+    refreshRiderRotation();
+
+    updateLocalStorage();
+  }
+}
+
+function EndBreak(uniqueID) {
+  let rider = riders.find(function (r) {
+    return r.id == uniqueID;
+  });
+
+  rider.toggleOnBreak();
+  ridersOnBreak.splice(ridersOnBreak.indexOf(uniqueID), 1);
+
+  ridersAvailable.push(uniqueID);
+  refreshRiderRotation();
+
+  updateLocalStorage();
+}
+
+// Refresh Rider Rotation page
+function refreshRiderRotation() {
+  const availableList = document.querySelector("#available");
+  const onARideList = document.querySelector("#onARide");
+  const onABreakList = document.querySelector("#onABreak");
+
+  availableList.innerHTML = "";
+  onARideList.innerHTML = "";
+  onABreakList.innerHTML = "";
+
+  ridersAvailable.forEach(function (id) {
+    let rider = riders.find(function (r) {
+      return r.id == id;
+    });
+    listRider(rider, "available");
+  });
+
+  ridersOnARide.forEach(function (id) {
+    let rider = riders.find(function (r) {
+      return r.id == id;
+    });
+    listRider(rider, "onARide");
+  });
+
+  ridersOnBreak.forEach(function (id) {
+    let rider = riders.find(function (r) {
+      return r.id == id;
+    });
+    listRider(rider, "onBreak");
+  });
+}
+
+// Create rider list item
+function listRider(rider, status) {
+  console.log(rider);
+  console.log(status);
+
+  let listItem = document.createElement("li");
+  listItem.id = `li-${rider.id}`;
+
+  let riderBox = document.createElement("div");
+  riderBox.classList.add("riderBox");
+
+  let span = document.createElement("span");
+  span.classList.add("riderNameBox");
+  span.id = `nameBox-${rider.id}`;
+  span.textContent = rider.name;
+
+  riderBox.appendChild(span);
+
+  let buttonsContainer = document.createElement("div");
+  buttonsContainer.classList.add("buttonsContainer");
+
+  if (status === "onARide") {
+    const onARideList = document.querySelector("#onARide");
+    let backButton = document.createElement("button");
+    backButton.classList.add("back");
+    backButton.textContent = "Back";
+    backButton.id = `back-${rider.id}`;
+
+    let breakButton = document.createElement("button");
+    breakButton.classList.add("break");
+    breakButton.id = `break-${rider.id}`;
+    if (rider.getHadBreak()) breakButton.style.opacity = "0.3";
+
+    let deleteButton = document.createElement("button");
+    deleteButton.classList.add("delete");
+    deleteButton.textContent = "X";
+    deleteButton.id = `delete-${rider.id}`;
+    deleteButton.style.order = "3";
+
+    buttonsContainer.appendChild(backButton);
+    buttonsContainer.appendChild(breakButton);
+    buttonsContainer.appendChild(deleteButton);
+
+    riderBox.appendChild(buttonsContainer);
+    listItem.appendChild(riderBox);
+    onARideList.appendChild(listItem);
+  } else if (status === "onBreak") {
+    const onABreakList = document.querySelector("#onABreak");
+    let startButton = document.createElement("button");
+    startButton.classList.add("start");
+    startButton.textContent = "Go";
+    startButton.id = `start-${rider.id}`;
+
+    let backButton = document.createElement("button");
+    backButton.classList.add("backFromBreak");
+    backButton.textContent = "Back";
+    backButton.id = `breakEnd-${rider.id}`;
+
+    let deleteButton = document.createElement("button");
+    deleteButton.classList.add("delete");
+    deleteButton.textContent = "X";
+    deleteButton.id = `delete-${rider.id}`;
+    deleteButton.style.order = "3";
+
+    // Create timer
+    let counter = document.createElement("p");
+    counter.classList.add("breakTimer");
+    counter.id = `breakTimer-${rider.id}`;
+
+    let timeNow = new Date();
+    let totalSecondsLeft = (rider.getBreakEndTime() - timeNow.getTime()) / 1000;
+    let secondsLeft = Math.floor(totalSecondsLeft % 60);
+    let minutesLeft = Math.floor(totalSecondsLeft / 60);
+    if (secondsLeft < 10)
+      counter.textContent = `${minutesLeft}:0${secondsLeft}`;
+    else counter.textContent = `${minutesLeft}:${secondsLeft}`;
+
+    let timerCircle = document.createElement("div");
+    timerCircle.classList.add("timer-circle");
+    timerCircle.style = `--duration: ${totalSecondsLeft};--size: 30;`;
+    let circleMask = document.createElement("div");
+    circleMask.classList.add("mask");
+
+    setInterval(function () {
+      if (!rider.getHadBreak()) updateCountdown(rider);
+    }, 1000);
+
+    buttonsContainer.appendChild(startButton);
+    buttonsContainer.appendChild(backButton);
+    buttonsContainer.appendChild(deleteButton);
+
+    riderBox.appendChild(buttonsContainer);
+    listItem.appendChild(riderBox);
+    timerCircle.appendChild(circleMask);
+    listItem.appendChild(timerCircle);
+    listItem.appendChild(counter);
+
+    // listItem.appendChild(counter);
+    onABreakList.appendChild(listItem);
+  } else {
+    const availableList = document.querySelector("#available");
+    let startButton = document.createElement("button");
+    startButton.classList.add("start");
+    startButton.id = `start-${rider.id}`;
+    startButton.textContent = "Go";
+
+    let breakButton = document.createElement("button");
+    breakButton.classList.add("break");
+    breakButton.id = `break-${rider.id}`;
+
+    let deleteButton = document.createElement("button");
+    deleteButton.classList.add("delete");
+    deleteButton.id = `delete-${rider.id}`;
+    deleteButton.textContent = "X";
+
+    if (rider.getHadBreak()) breakButton.style.opacity = "0.3";
+
+    buttonsContainer.appendChild(startButton);
+    buttonsContainer.appendChild(breakButton);
+    buttonsContainer.appendChild(deleteButton);
+    deleteButton.style.order = "3";
+
+    riderBox.appendChild(buttonsContainer);
+
+    listItem.appendChild(riderBox);
+
+    availableList.appendChild(listItem);
+  }
+}
+
+function loadRotationPage() {
+  console.log(ridersAvailable);
+  console.log(ridersOnARide);
+  console.log(ridersOnBreak);
+
+  document.querySelector("header").innerHTML = "";
+  const pageTitle = document.createElement("h1");
+  pageTitle.textContent = "RIDER ROTATION";
+  pageTitle.classList.add("pageTitle");
+  document.querySelector("header").appendChild(pageTitle);
+  document.querySelector(".content").remove();
+
+  const content = document.createElement("div");
+  content.classList.add("content", "contentRotation");
+
+  document.querySelector(".main").appendChild(content);
+
+  // Sections
+  const onARideContainer = document.createElement("div");
+  const availableContainer = document.createElement("div");
+  const onABreakContainer = document.createElement("div");
+
+  content.appendChild(onARideContainer);
+  content.appendChild(availableContainer);
+  content.appendChild(onABreakContainer);
+
+  // Labels for each section
+  const onARideLabel = document.createElement("p");
+  onARideLabel.textContent = "On a ride";
+  onARideContainer.appendChild(onARideLabel);
+
+  const availableLabel = document.createElement("p");
+  availableLabel.textContent = "Available";
+  availableContainer.appendChild(availableLabel);
+
+  onABreakContainer.id = "onABreakSection";
+  const onABreakLabel = document.createElement("p");
+  onABreakLabel.textContent = "On Break";
+  onABreakContainer.appendChild(onABreakLabel);
+
+  // Lists(ul)
+  const onARideList = document.createElement("ul");
+  onARideList.classList.add("rotationList");
+  onARideList.id = "onARide";
+  onARideContainer.appendChild(onARideList);
+
+  const availableList = document.createElement("ul");
+  availableList.classList.add("rotationList");
+  availableList.id = "available";
+  availableContainer.appendChild(availableList);
+
+  const onABreakList = document.createElement("ul");
+  onABreakList.classList.add("rotationList");
+  onABreakList.id = "onABreak";
+  onABreakContainer.appendChild(onABreakList);
+
+  // Populate each list
+
+  // ON A RIDE
+  ridersOnARide.forEach((r) => {
+    // let riderToList = riders.find((rider) => rider.id === r);
+    listRider(
+      riders.find((rider) => rider.id === r),
+      "onARide"
+    );
+  });
+
+  // AVAILABLE
+  ridersAvailable.forEach((r) => {
+    // let riderToList = riders.find((rider) => rider.id === r);
+    listRider(
+      riders.find((rider) => rider.id === r),
+      "available"
+    );
+  });
+
+  // ON A BREAK
+  ridersOnBreak.forEach((r) => {
+    // let riderToList = riders.find((rider) => rider.id === r);
+    listRider(
+      riders.find((rider) => rider.id === r),
+      "onBreak"
+    );
+  });
+}
+
+function updateCountdown(rider) {
+  let timeNow = new Date();
+  let totalSecondsLeft = (rider.getBreakEndTime() - timeNow.getTime()) / 1000;
+  let secondsLeft = Math.floor(totalSecondsLeft % 60);
+  let minutesLeft = Math.floor(totalSecondsLeft / 60);
+  let counter = document.querySelector(`#breakTimer-${rider.id}`);
+
+  if (secondsLeft < 10) counter.textContent = `${minutesLeft}:0${secondsLeft}`;
+  else counter.textContent = `${minutesLeft}:${secondsLeft}`;
+  if (minutesLeft <= 1) counter.style.color = "red";
+
+  if (minutesLeft <= 0 && secondsLeft <= 0) {
+    alert(`${rider.name} has finished his break!`);
+    EndBreak(rider.id);
+    // clearInterval(intervalFunction);
+  }
+}
+
+export {
+  loadRotationPage,
+  ridersAvailable,
+  ridersOnARide,
+  ridersOnBreak,
+  addRiderToRotation,
+  StartRide,
+  EndRide,
+  GoOnBreak,
+  EndBreak,
+  DeleteRiderFromRotation,
+  refreshRiderRotation,
+};
