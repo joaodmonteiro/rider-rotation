@@ -49,8 +49,6 @@ async function loadDatabaseAndLocalStorage() {
 //#region MENU
 
 // Menu variables
-let ridersTabOpen = false;
-let bikesTabOpen = false;
 let currentPage = "Rotation";
 
 // Insert logo
@@ -167,44 +165,6 @@ bikesTabButton.addEventListener("click", function () {
   loadBikesPage();
 });
 
-function openRidersTab() {
-  ridersTabContainer.innerHTML = "";
-  ridersTabListItem.appendChild(ridersTabContainer);
-  ridersTabContainer.classList.add("navListContainer");
-  let seeAllRidersButton = document.createElement("div");
-  seeAllRidersButton.textContent = "All Riders";
-  seeAllRidersButton.classList.add("see-all-button");
-  seeAllRidersButton.addEventListener("click", () => {
-    loadRidersPage();
-    currentPage = "Riders";
-  }); // Open riders page
-  ridersTabContainer.appendChild(seeAllRidersButton);
-  riders.forEach(function (rider) {
-    const riderListing = document.createElement("div");
-    riderListing.classList.add("menu-rider-listing");
-    //Name
-    const riderName = document.createElement("div");
-    riderName.textContent = rider.name;
-    riderListing.appendChild(riderName);
-    //options button
-    const optionsButton = document.createElement("div");
-    optionsButton.textContent = "...";
-    optionsButton.classList.add("options-button");
-    riderListing.appendChild(optionsButton);
-
-    optionsButton.addEventListener("click", (event) => {
-      openOptions(rider);
-      event.stopPropagation();
-    });
-
-    ridersTabContainer.appendChild(riderListing);
-  });
-  ridersTabOpen = true;
-  ridersTabButton.classList.add("selected-tab");
-  rotationTabButton.classList.remove("selected-tab");
-  bikesTabButton.classList.remove("selected-tab");
-}
-
 //#endregion MENU
 
 // Insert plus sign
@@ -275,4 +235,4 @@ document.addEventListener("click", function (obj) {
   }
 });
 
-export { currentPage, ridersTabOpen, openRidersTab };
+export { currentPage };

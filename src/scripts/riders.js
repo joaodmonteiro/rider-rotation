@@ -7,7 +7,7 @@ import {
   ridersOnBreak,
 } from "./rotation";
 import { updateLocalStorage } from "./storage";
-import { currentPage, openRidersTab, ridersTabOpen } from ".";
+import { currentPage } from ".";
 import { popUpNotification, addNewRiderModal } from "./DOM";
 
 // Rider Factory Function
@@ -259,8 +259,6 @@ function openOptions(rider) {
       popUpNotification("Deleted!");
       if (currentPage === "Riders") loadRidersPage();
       else if (currentPage === "Rotation") refreshRiderRotation();
-
-      if (ridersTabOpen) openRidersTab();
     });
   }
 }

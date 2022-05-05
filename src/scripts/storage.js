@@ -50,49 +50,51 @@ function updateLocalStorage() {
 
 // Import rotation from local storage
 function importFromLocalStorage() {
-  for (let i = 0; i < localStorage.getItem("ridersAvailableLength"); i++) {
-    let id = localStorage.getItem(`ridersAvailable[${i}]`);
+  if (localStorage.getItem("ridersAvailableLength")) {
+    for (let i = 0; i < localStorage.getItem("ridersAvailableLength"); i++) {
+      let id = localStorage.getItem(`ridersAvailable[${i}]`);
 
-    ridersAvailable.push(id);
-  }
-
-  for (let i = 0; i < localStorage.getItem("ridersOnARideLength"); i++) {
-    let id = localStorage.getItem(`ridersOnARide[${i}]`);
-
-    ridersOnARide.push(id);
-    let rider = riders.find((r) => r.id === id);
-    rider.toggleOnARide();
-  }
-
-  for (let i = 0; i < localStorage.getItem("ridersOnBreakLength"); i++) {
-    let breakInfo = localStorage.getItem(`ridersOnBreak[${i}]`);
-    let id = breakInfo.substring(0, breakInfo.indexOf("-"));
-    let breakEndTime = new Date(
-      breakInfo.substring(breakInfo.indexOf("-") + 1)
-    );
-
-    let now = new Date();
-
-    if (breakEndTime > now) {
-      let riderOnBreak = riders.find((r) => r.id === id);
-
-      riderOnBreak.onBreak = true;
-      riderOnBreak.hadBreak = true;
-      riderOnBreak.setBreakEndTime(breakEndTime);
-
-      ridersOnBreak.push(id);
-    } else if (
-      breakEndTime.getFullYear() === now.getFullYear() &&
-      breakEndTime.getMonth() === now.getMonth() &&
-      breakEndTime.getDate() === now.getDate()
-    ) {
-      let riderOnBreak = riders.find((r) => r.id === id);
-      console.log(typeof id);
-      riderOnBreak.hadBreak = true;
-      console.log(riders);
+      ridersAvailable.push(id);
     }
 
-    console.log("break end time " + breakEndTime);
+    for (let i = 0; i < localStorage.getItem("ridersOnARideLength"); i++) {
+      let id = localStorage.getItem(`ridersOnARide[${i}]`);
+
+      ridersOnARide.push(id);
+      let rider = riders.find((r) => r.id === id);
+      rider.toggleOnARide();
+    }
+
+    for (let i = 0; i < localStorage.getItem("ridersOnBreakLength"); i++) {
+      let breakInfo = localStorage.getItem(`ridersOnBreak[${i}]`);
+      let id = breakInfo.substring(0, breakInfo.indexOf("-"));
+      let breakEndTime = new Date(
+        breakInfo.substring(breakInfo.indexOf("-") + 1)
+      );
+
+      let now = new Date();
+
+      if (breakEndTime > now) {
+        let riderOnBreak = riders.find((r) => r.id === id);
+
+        riderOnBreak.onBreak = true;
+        riderOnBreak.hadBreak = true;
+        riderOnBreak.setBreakEndTime(breakEndTime);
+
+        ridersOnBreak.push(id);
+      } else if (
+        breakEndTime.getFullYear() === now.getFullYear() &&
+        breakEndTime.getMonth() === now.getMonth() &&
+        breakEndTime.getDate() === now.getDate()
+      ) {
+        let riderOnBreak = riders.find((r) => r.id === id);
+        console.log(typeof id);
+        riderOnBreak.hadBreak = true;
+        console.log(riders);
+      }
+
+      console.log("break end time " + breakEndTime);
+    }
   }
 }
 
