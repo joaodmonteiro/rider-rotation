@@ -1,5 +1,8 @@
-import "../styles.css";
+import "../styles/styles.css";
 import gorillasLogo from "../images/logo.jpeg";
+import rotationIcon from "../images/rotation-icon.svg";
+import ridersIcon from "../images/riders-icon.svg";
+import bikesIcon from "../images/bikes-icon.svg";
 import { riders, loadRidersPage, openOptions, closeOptions } from "./riders";
 import { bikes, loadBikesPage } from "./bikes";
 import {
@@ -14,7 +17,7 @@ import {
   DeleteRiderFromRotation,
 } from "./rotation";
 import { importFromLocalStorage } from "./storage";
-import { importRidersFromDatabase } from "./firebase";
+import { importRidersFromDatabase, importBikesFromDatabase } from "./firebase";
 
 console.log("riders:");
 console.log(riders);
@@ -32,6 +35,7 @@ loadDatabaseAndLocalStorage();
 
 async function loadDatabaseAndLocalStorage() {
   await importRidersFromDatabase();
+  await importBikesFromDatabase();
 
   // Sort riders alphabetically
   riders.sort((a, b) => a.name.localeCompare(b.name));
@@ -39,7 +43,6 @@ async function loadDatabaseAndLocalStorage() {
   // Import rotation info from local storage
   importFromLocalStorage();
 
-  // Load rotation page
   loadRotationPage();
 }
 
@@ -53,6 +56,21 @@ let currentPage = "Rotation";
 // Insert logo
 const logo = new Image();
 logo.src = gorillasLogo;
+
+// rotation icon
+const rotationTabIcon = new Image();
+rotationTabIcon.src = rotationIcon;
+rotationTabIcon.classList.add("tab-icon");
+
+// Riders Icon
+const ridersTabIcon = new Image();
+ridersTabIcon.src = ridersIcon;
+ridersTabIcon.classList.add("tab-icon");
+
+// Bikes Icon
+const bikesTabIcon = new Image();
+bikesTabIcon.src = bikesIcon;
+bikesTabIcon.classList.add("tab-icon");
 
 document.querySelector(".logoContainer").appendChild(logo);
 document.querySelector(".logoContainer").addEventListener("click", () => {
@@ -73,65 +91,80 @@ document.addEventListener("click", (event) => {
   }
 });
 
-const rotationTabButton = document.querySelector("#rotationButton");
-const ridersTabButton = document.querySelector("#ridersButton");
-const bikesTabButton = document.querySelector("#bikesButton");
+const rotationTabContainer = document.querySelector("#rotation-tab-container");
+const ridersTabContainer = document.querySelector("#riders-tab-container");
+const bikesTabContainer = document.querySelector("#bikes-tab-container");
 
-const ridersTabListItem = document.querySelector("#ridersButtonListItem");
-const bikesTabListItem = document.querySelector("#bikesButtonListItem");
+// Insert icons on tabs
+const rotationIconContainer = document.querySelector(
+  "#rotation-icon-container"
+);
+rotationIconContainer.appendChild(rotationTabIcon);
+const ridersIconContainer = document.querySelector("#riders-icon-container");
+ridersIconContainer.appendChild(ridersTabIcon);
+const bikesIconContainer = document.querySelector("#bikes-icon-container");
+bikesIconContainer.appendChild(bikesTabIcon);
+
+// Insert labels on tabs
+const rotationTabButton = document.createElement("a");
+rotationTabButton.textContent = "Rotation";
+rotationTabButton.id = "rotation-button";
+rotationTabButton.classList.add("tab-button");
+rotationTabContainer.appendChild(rotationTabButton);
+
+const ridersTabButton = document.createElement("a");
+ridersTabButton.textContent = "Riders";
+ridersTabButton.id = "riders-button";
+ridersTabButton.classList.add("tab-button");
+ridersTabContainer.appendChild(ridersTabButton);
+
+const bikesTabButton = document.createElement("a");
+bikesTabButton.textContent = "Bikes";
+bikesTabButton.id = "bikes-button";
+bikesTabButton.classList.add("tab-button");
+bikesTabContainer.appendChild(bikesTabButton);
+
+// MENU
+if (currentPage === "Rotation") {
+  rotationTabContainer.classList.add("selected-tab");
+  ridersTabContainer.classList.remove("selected-tab");
+  bikesTabContainer.classList.remove("selected-tab");
+  loadRotationPage();
+} else if (currentPage === "Riders") {
+  rotationTabContainer.classList.remove("selected-tab");
+  ridersTabContainer.classList.add("selected-tab");
+  bikesTabContainer.classList.remove("selected-tab");
+  loadRidersPage();
+} else if (currentPage === "Bikes") {
+  rotationTabContainer.classList.remove("selected-tab");
+  ridersTabContainer.classList.remove("selected-tab");
+  bikesTabContainer.classList.add("selected-tab");
+  loadBikesPage();
+}
 
 // Open Rider Rotation page
-rotationTabButton.addEventListener("click", function () {
-  loadRotationPage();
+rotationTabContainer.addEventListener("click", function () {
   currentPage = "Rotation";
-  rotationTabButton.classList.add("selected-tab");
-  ridersTabButton.classList.remove("selected-tab");
-  bikesTabButton.classList.remove("selected-tab");
+  rotationTabContainer.classList.add("selected-tab");
+  ridersTabContainer.classList.remove("selected-tab");
+  bikesTabContainer.classList.remove("selected-tab");
+  loadRotationPage();
 });
 
 // Open Riders Page
-const ridersTabContainer = document.createElement("div");
-
-ridersTabButton.addEventListener("click", function () {
-  if (!ridersTabOpen) openRidersTab();
-  else {
-    ridersTabContainer.innerHTML = "";
-    ridersTabContainer.remove();
-    ridersTabOpen = false;
-    ridersTabButton.classList.remove("selected-tab");
-  }
+ridersTabContainer.addEventListener("click", function () {
+  currentPage = "Riders";
+  rotationTabContainer.classList.remove("selected-tab");
+  ridersTabContainer.classList.add("selected-tab");
+  bikesTabContainer.classList.remove("selected-tab");
+  loadRidersPage();
 });
 
-// Open Bikes page
-let bikesTabContainer = document.createElement("div");
-
 bikesTabButton.addEventListener("click", function () {
-  if (!bikesTabOpen) {
-    bikesTabListItem.appendChild(bikesTabContainer);
-    bikesTabContainer.classList.add("navListContainer");
-    let seeAllBikesButton = document.createElement("a");
-    seeAllBikesButton.textContent = "All Bikes";
-    seeAllBikesButton.classList.add("see-all-button");
-    seeAllBikesButton.addEventListener("click", () => {
-      loadBikesPage();
-      currentPage = "Bikes";
-    }); // Open bikes page
-    bikesTabContainer.appendChild(seeAllBikesButton);
-    bikes.forEach((bike) => {
-      let bikeListing = document.createElement("a");
-      bikeListing.textContent = bike.number;
-      bikesTabContainer.appendChild(bikeListing);
-    });
-    bikesTabOpen = true;
-    bikesTabButton.classList.add("selected-tab");
-    rotationTabButton.classList.remove("selected-tab");
-    ridersTabButton.classList.remove("selected-tab");
-  } else {
-    bikesTabContainer.innerHTML = "";
-    bikesTabContainer.remove();
-    bikesTabOpen = false;
-    bikesTabButton.classList.remove("selected-tab");
-  }
+  rotationTabContainer.classList.remove("selected-tab");
+  ridersTabContainer.classList.remove("selected-tab");
+  bikesTabContainer.classList.add("selected-tab");
+  loadBikesPage();
 });
 
 function openRidersTab() {
@@ -173,14 +206,6 @@ function openRidersTab() {
 }
 
 //#endregion MENU
-
-if (currentPage === "Rotation") {
-  // loadRotationPage();
-} else if (currentPage === "Riders") {
-  loadRidersPage();
-} else if (currentPage === "Bikes") {
-  loadBikesPage();
-}
 
 // Insert plus sign
 

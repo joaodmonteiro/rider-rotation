@@ -1,6 +1,5 @@
 import plusSign from "../images/plus.svg";
-import { saveRider, colRef, deleteRiderFromDB } from "./firebase";
-import { doc, getDocs } from "firebase/firestore";
+import { saveRider, deleteRiderFromDB } from "./firebase";
 import {
   refreshRiderRotation,
   ridersAvailable,
@@ -9,6 +8,7 @@ import {
 } from "./rotation";
 import { updateLocalStorage } from "./storage";
 import { currentPage, openRidersTab, ridersTabOpen } from ".";
+import { popUpNotification, addNewRiderModal } from "./DOM";
 
 // Rider Factory Function
 const Rider = (name, contract, id) => {
@@ -39,7 +39,7 @@ const Rider = (name, contract, id) => {
     } else if (!getHadBreak()) {
       setOnBreak(true);
       let time = new Date();
-      time.setMinutes(time.getMinutes() + 30);
+      time.setMinutes(time.getMinutes() + 1);
       setBreakEndTime(time);
       console.log(breakEndTime);
     }
@@ -208,6 +208,7 @@ function openOptions(rider) {
         document.querySelector(".options-container").remove();
         riderOptionsOpen = "";
         updateLocalStorage();
+        popUpNotification("Added!");
         if (currentPage === "Riders") loadRidersPage();
         else if (currentPage === "Rotation") refreshRiderRotation();
       });
@@ -229,16 +230,17 @@ function openOptions(rider) {
         document.querySelector(".options-container").remove();
         riderOptionsOpen = "";
         updateLocalStorage();
+        popUpNotification("Removed!");
         if (currentPage === "Riders") loadRidersPage();
         else if (currentPage === "Rotation") refreshRiderRotation();
       });
     }
 
-    const editRiderButton = document.createElement("li");
-    editRiderButton.textContent = "Edit";
-    editRiderButton.classList.add("option");
-    editRiderButton.id = `editRider-${rider.id}`;
-    optionsContainer.appendChild(editRiderButton);
+    // const editRiderButton = document.createElement("li");
+    // editRiderButton.textContent = "Edit";
+    // editRiderButton.classList.add("option");
+    // editRiderButton.id = `editRider-${rider.id}`;
+    // optionsContainer.appendChild(editRiderButton);
 
     const deleteRiderButton = document.createElement("li");
     deleteRiderButton.textContent = "Delete";
@@ -254,6 +256,7 @@ function openOptions(rider) {
       deleteRider(rider.id);
       document.querySelector(".options-container").remove();
       riderOptionsOpen = "";
+      popUpNotification("Deleted!");
       if (currentPage === "Riders") loadRidersPage();
       else if (currentPage === "Rotation") refreshRiderRotation();
 
@@ -273,7 +276,7 @@ function closeOptions() {
 function loadRidersPage() {
   document.querySelector("header").innerHTML = "";
   const pageTitle = document.createElement("h1");
-  pageTitle.textContent = "RIDERS";
+  pageTitle.textContent = "Riders";
   pageTitle.classList.add("pageTitle");
   document.querySelector("header").appendChild(pageTitle);
   document.querySelector(".content").remove();
@@ -292,150 +295,7 @@ function loadRidersPage() {
   document.querySelector("header").appendChild(addNewButton);
 
   // Click on 'add new' button
-  addNewButton.addEventListener("click", () => {
-    // Modal
-    const addRiderModal = document.createElement("div");
-    addRiderModal.classList.add("modal");
-    // Create modal background
-    const addRiderModalBackground = document.createElement("div");
-    addRiderModalBackground.classList.add("modal-background");
-    addRiderModal.appendChild(addRiderModalBackground);
-
-    document.body.appendChild(addRiderModal);
-
-    // Create container(box)
-    let addRiderBoxContainer = document.createElement("div");
-    addRiderBoxContainer.classList.add("addRiderBoxContainer");
-    addRiderModal.appendChild(addRiderBoxContainer);
-
-    // Title
-    let addRiderTitle = document.createElement("h2");
-    addRiderTitle.textContent = "New Rider";
-    addRiderBoxContainer.appendChild(addRiderTitle);
-
-    //Input name Label
-    const inputNameLabel = document.createElement("label");
-    inputNameLabel.htmlFor = "rider-name-input";
-    inputNameLabel.textContent = "Name";
-    addRiderBoxContainer.appendChild(inputNameLabel);
-
-    // Input box for name
-    let inputName = document.createElement("input");
-    inputName.type = "name";
-    inputName.id = "rider-name-input";
-    inputName.classList.add("inputText");
-    addRiderBoxContainer.appendChild(inputName);
-
-    // checkboxes container
-    const checkBoxContainer = document.createElement("div");
-    checkBoxContainer.classList.add("checkbox-container");
-    addRiderBoxContainer.appendChild(checkBoxContainer);
-
-    // fulltime checkbox(CB)
-    const fulltimeCBContainer = document.createElement("div");
-    const fulltimeCBLabel = document.createElement("label");
-    fulltimeCBLabel.textContent = "Full-Time";
-    fulltimeCBLabel.htmlFor = "fulltime-cb";
-    const fulltimeCB = document.createElement("input");
-    fulltimeCB.type = "radio";
-    fulltimeCB.id = "fulltime-cb";
-    fulltimeCB.name = "contract-type";
-    fulltimeCB.value = "fulltime";
-    fulltimeCBContainer.appendChild(fulltimeCBLabel);
-    fulltimeCBContainer.appendChild(fulltimeCB);
-    checkBoxContainer.appendChild(fulltimeCBContainer);
-
-    // partime checkbox(CB)
-    const parttimeCBContainer = document.createElement("div");
-    const parttimeCBLabel = document.createElement("label");
-    parttimeCBLabel.textContent = "Part-Time";
-    parttimeCBLabel.htmlFor = "parttime-cb";
-    const parttimeCB = document.createElement("input");
-    parttimeCB.type = "radio";
-    parttimeCB.id = "parttime-cb";
-    parttimeCB.name = "contract-type";
-    parttimeCB.value = "parttime";
-    parttimeCBContainer.appendChild(parttimeCBLabel);
-    parttimeCBContainer.appendChild(parttimeCB);
-    checkBoxContainer.appendChild(parttimeCBContainer);
-
-    // 0-hour checkbox(CB)
-    const zerohourCBContainer = document.createElement("div");
-    const zerohourCBLabel = document.createElement("label");
-    zerohourCBLabel.textContent = "0-Hour";
-    zerohourCBLabel.htmlFor = "zerohour-cb";
-    const zerohourCB = document.createElement("input");
-    zerohourCB.type = "radio";
-    zerohourCB.id = "zerohour-cb";
-    zerohourCB.name = "contract-type";
-    zerohourCB.value = "zerohour";
-    zerohourCBContainer.appendChild(zerohourCBLabel);
-    zerohourCBContainer.appendChild(zerohourCB);
-    checkBoxContainer.appendChild(zerohourCBContainer);
-
-    // Buttons container
-    const modalButtonsContainer = document.createElement("div");
-    modalButtonsContainer.classList.add("modal-buttons-container");
-    addRiderBoxContainer.appendChild(modalButtonsContainer);
-
-    // Cancel button
-    const cancelButton = document.createElement("button");
-    cancelButton.textContent = "Cancel";
-    cancelButton.classList.add("secondary-button");
-    modalButtonsContainer.appendChild(cancelButton);
-
-    // Submit button
-    let addRiderButton = document.createElement("button");
-    addRiderButton.textContent = "Add";
-    addRiderButton.classList.add("primary-button");
-    modalButtonsContainer.appendChild(addRiderButton);
-
-    addRiderButton.addEventListener("click", () => {
-      if (
-        inputName.value.trim().length &&
-        (fulltimeCB.checked || parttimeCB.checked || zerohourCB.checked)
-      ) {
-        let contractType;
-        if (fulltimeCB.checked) contractType = "Full-Time";
-        if (parttimeCB.checked) contractType = "Part-Time";
-        if (zerohourCB.checked) contractType = "0-Hour";
-        let riderName = inputName.value;
-        createRider(riderName, contractType);
-        addRiderModal.remove();
-        console.log("inputname value: " + inputName.value);
-      }
-    });
-
-    inputName.focus();
-
-    // Close window if clicked outside
-    addRiderModalBackground.addEventListener("click", () => {
-      addRiderModal.remove();
-    });
-
-    // Or on cancel button
-    cancelButton.addEventListener("click", () => addRiderModal.remove());
-
-    // Submit if 'Enter' is pressed
-    document.addEventListener("keyup", function (event) {
-      if (event.keyCode === 13) {
-        event.preventDefault();
-        document.querySelector(".addRiderButton").click();
-      }
-    });
-  });
-}
-
-async function refreshRiders() {
-  riders.length = 0;
-  getDocs(colRef)
-    .then((snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        importRider(doc.data().name, doc.data().contract, doc.id);
-      });
-      loadRidersPage();
-    })
-    .catch((err) => console.log(err.message));
+  addNewButton.addEventListener("click", () => addNewRiderModal());
 }
 
 export {
@@ -444,7 +304,6 @@ export {
   deleteRider,
   importRider,
   loadRidersPage,
-  refreshRiders,
   openOptions,
   closeOptions,
 };

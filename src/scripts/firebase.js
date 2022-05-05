@@ -7,7 +7,8 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { importRider, refreshRiders } from "./riders";
+import { riders, importRider, loadRidersPage } from "./riders";
+import { bikes, importBike, loadBikesPage } from "./bikes";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD87hMgZZctPdsIFIz1MPlB0l3J3E9fbb8",
@@ -22,26 +23,53 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const colRef = collection(db, "riders");
+const colRefRiders = collection(db, "riders");
+const colRefBikes = collection(db, "bikes");
 
 async function importRidersFromDatabase() {
-  return getDocs(colRef)
+  return getDocs(colRefRiders)
     .then((snapshot) => {
       snapshot.docs.forEach((doc) => {
         importRider(doc.data().name, doc.data().contract, doc.id);
       });
-      console.log("database imported");
+    })
+    .catch((err) => console.log(err.message));
+}
+
+async function importBikesFromDatabase() {
+  return getDocs(colRefBikes)
+    .then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        importBike(
+          doc.data().number,
+          doc.data().model,
+          doc.data().status,
+          doc.data().details
+        );
+      });
     })
     .catch((err) => console.log(err.message));
 }
 
 function saveRider(name, contract) {
-  addDoc(colRef, {
+  addDoc(colRefRiders, {
     name: name,
     contract: contract,
   }).then(() => {
     console.log("success!");
     refreshRiders();
+  });
+}
+
+function saveBike(number, model, status, details) {
+  addDoc(colRefBikes, {
+    number: number,
+    model: model,
+    status: status,
+    details: details,
+  }).then(() => {
+    console.log("success!");
+    refreshBikes();
   });
 }
 
@@ -51,12 +79,46 @@ function deleteRiderFromDB(id) {
   deleteDoc(docRef);
 }
 
+function deleteBikeFromDB(id) {
+  const docRef = doc(db, "bikes", id);
+
+  deleteDoc(docRef);
+}
+
+async function refreshRiders() {
+  riders.length = 0;
+  getDocs(colRefRiders)
+    .then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        importRider(doc.data().name, doc.data().contract, doc.id);
+      });
+      loadRidersPage();
+    })
+    .catch((err) => console.log(err.message));
+}
+
+async function refreshBikes() {
+  bikes.length = 0;
+  getDocs(colRefBikes)
+    .then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        importBike(
+          doc.data().number,
+          doc.data().model,
+          doc.data().status,
+          doc.data().details
+        );
+      });
+      loadBikesPage();
+    })
+    .catch((err) => console.log(err.message));
+}
+
 export {
   importRidersFromDatabase,
+  importBikesFromDatabase,
   saveRider,
+  saveBike,
   deleteRiderFromDB,
-  colRef,
-  doc,
-  db,
-  deleteDoc,
+  deleteBikeFromDB,
 };

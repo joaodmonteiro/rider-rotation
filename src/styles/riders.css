@@ -1,0 +1,123 @@
+@import 'constants.css';
+
+.new-rider-button {
+    display: flex;
+    width: auto;
+    padding: .8em 1.2em;
+    gap: .5em;
+    border-radius: 8px;
+    font-size: var(--fs-small);
+  }
+  
+  .new-rider-button > div {
+    white-space: nowrap;
+  }
+  
+  .contentRiders {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding-left: 1em;
+    max-height: 100%;
+  }
+  
+  .contentRiders > div {
+    overflow: visible;
+    
+  }
+  
+  .contentRiders > div > h2 {
+    font-size: var(--fs-normal);
+    color: rgba(85, 85, 85, 1);
+    text-align: center;
+    padding-right: 1em;
+  }
+  
+  .contentRiders > div > ul {
+    list-style: none;
+    padding: .5em 1em 0 0;
+    height: 82vh;
+    overflow-y: scroll;
+    /* overflow: visible; */
+  }
+  
+  .contentRiders > div > ul > li {
+    display: flex;
+    background-color: white;
+    margin-bottom: .5em;
+    height: 2em;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1em;
+    border-radius: .4em;
+    box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.05);
+    font-size: var(--fs-small);
+    color: var(--dark-grey);
+  }
+  
+  .options-button {
+    cursor: pointer;
+    width: 20px;
+    text-align: center;
+  }
+  
+  .options-container {
+    position: absolute;
+    border: 1px solid rgba(234, 234, 234, 1);
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .options-container > *:not(:last-child) {
+    border-bottom: 1px solid rgba(234, 234, 234, 1);
+  }
+  
+  .options-container > li {
+    padding: 12px 12px 8px 12px;
+  }
+  
+  .options-container > li:hover {
+    background-color: rgba(234, 234, 234, 1);
+  }
+
+  .addRiderBoxContainer {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    width: 360px;
+    transform: translate(-50%, -50%) scale(0.5);
+    box-shadow: 0 4px 30px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 18px;
+    padding: 1.4em;
+    opacity: 0;
+    white-space: nowrap;
+  }
+  .addRiderBoxContainer > h2 {
+    text-align: center;
+    margin-bottom: .5em;
+  }
+  
+  .addRiderBoxContainer > label {
+    font-size: var(--fs-small);
+    margin-bottom: .4em;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 1.5em 0;
+  }
+  
+  .checkbox-container > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .checkbox-container > div > label {
+    margin-bottom: .4em;
+  }

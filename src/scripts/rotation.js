@@ -267,7 +267,7 @@ function listRider(rider, status) {
     let circleMask = document.createElement("div");
     circleMask.classList.add("mask");
 
-    setInterval(function () {
+    const breakInterval = setInterval(function () {
       if (!rider.getHadBreak()) updateCountdown(rider);
     }, 1000);
 
@@ -321,7 +321,7 @@ function loadRotationPage() {
 
   document.querySelector("header").innerHTML = "";
   const pageTitle = document.createElement("h1");
-  pageTitle.textContent = "RIDER ROTATION";
+  pageTitle.textContent = "Rider Rotation";
   pageTitle.classList.add("pageTitle");
   document.querySelector("header").appendChild(pageTitle);
   document.querySelector(".content").remove();
@@ -341,16 +341,16 @@ function loadRotationPage() {
   content.appendChild(onABreakContainer);
 
   // Labels for each section
-  const onARideLabel = document.createElement("p");
+  const onARideLabel = document.createElement("h2");
   onARideLabel.textContent = "On a ride";
   onARideContainer.appendChild(onARideLabel);
 
-  const availableLabel = document.createElement("p");
+  const availableLabel = document.createElement("h2");
   availableLabel.textContent = "Available";
   availableContainer.appendChild(availableLabel);
 
   onABreakContainer.id = "onABreakSection";
-  const onABreakLabel = document.createElement("p");
+  const onABreakLabel = document.createElement("h2");
   onABreakLabel.textContent = "On Break";
   onABreakContainer.appendChild(onABreakLabel);
 
