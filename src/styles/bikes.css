@@ -37,7 +37,30 @@
 
 .sort-selector {
   grid-column: 1 / 2;
-  text-align: right;
+  justify-self: flex-end;
+  display: flex;
+  z-index: 1;
+  color: var(--darker-mid-grey);
+}
+
+.sort-selector > div {
+  box-sizing: content-box;
+  height: 1.2em;
+  border: 1px solid var(--darker-mid-grey);;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  padding: 0 .2em;
+  margin-left: .3em;
+  background-color: var(--light-grey);
+  cursor: pointer;
+}
+
+.sort-selector > div > img {
+  width: .8em;
+  align-self: flex-start;
+  margin-top: .3em;
+  margin-left: .2em;
 }
 
 .bikes-panel {
@@ -181,6 +204,7 @@
   padding: 1.4em;
   opacity: 0;
   white-space: nowrap;
+  z-index: 3;
 }
 .addBikeBoxContainer > h2 {
   text-align: center;

@@ -5,5 +5,6 @@
     --fs-small: clamp(1rem, 1.1vw, 2rem);
     --dark-grey: rgba(88, 88, 88, 1);
     --mid-grey: rgba(182, 182, 182, 1);
+    --darker-mid-grey: rgba(152, 152, 152, 1);
     --light-grey: rgba(246, 245, 245, 1);
   }

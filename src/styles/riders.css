@@ -95,6 +95,7 @@
     padding: 1.4em;
     opacity: 0;
     white-space: nowrap;
+    z-index: 3;
   }
   .addRiderBoxContainer > h2 {
     text-align: center;

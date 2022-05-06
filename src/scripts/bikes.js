@@ -1,20 +1,22 @@
-import zoomoBike from "../images/zoomobike.png";
 import toggleIconOn from "../images/toggle-icon-on.svg";
 import toggleIconOff from "../images/toggle-icon-off.svg";
 import greenCircle from "../images/green-circle.svg";
 import redCircle from "../images/red-circle.svg";
 import plusSign from "../images/plus.svg";
 import { addNewBikeModal } from "../scripts/DOM";
-import { saveBike } from "../scripts/firebase";
+import { saveBike, updateBikeStatus } from "../scripts/firebase";
+import arrowDown from "../images/arrow-down.svg";
 
 // Array for bikes
 let bikes = [];
 
 let detailsPanelOpen = "";
 let panelAnimationRunning = false;
+let sortOptionsOpen = false;
+let sortingOption = "status";
 
 // Bike Factory Function
-const Bike = (number, model, status, details) => {
+const Bike = (number, model, status, details, id) => {
   let bikeStatus = status;
   let bikeDetails = details;
   const getStatus = () => bikeStatus;
@@ -36,6 +38,7 @@ const Bike = (number, model, status, details) => {
     number,
     model,
     details,
+    id,
     getStatus,
     getDetails,
     toggleStatus,
@@ -43,60 +46,19 @@ const Bike = (number, model, status, details) => {
   };
 };
 
-// Create some bikes
-// const M900 = Bike("M900", "Zoomo Zero", "Out of Action");
-// const Z895456 = Bike("Z895456", "Zoomo Zero", "In Action");
-// const Z895488 = Bike("Z895488", "Zoomo Zero", "Out of Action");
-// const Z895490 = Bike("Z895490", "Zoomo Zero", "In Action");
-// const Z895493 = Bike("Z895493", "Zoomo Zero", "In Action");
-// const Z896360 = Bike("Z896360", "Zoomo Zero", "In Action");
-// const Z896699 = Bike("Z896699", "Zoomo Zero", "In Action");
-// const Z897530 = Bike("Z897530", "Zoomo Zero", "In Action");
-// const Z897531 = Bike("Z897531", "Zoomo Zero", "In Action");
-// const Z897556 = Bike("Z897556", "Zoomo Zero", "In Action");
-// const Z897643 = Bike("Z897643", "Zoomo Zero", "In Action");
-// const Z897677 = Bike("Z897677", "Zoomo Zero", "In Action");
-// const Z897798 = Bike("Z897798", "Zoomo Zero", "In Action");
-// const Z897832 = Bike("Z897832", "Zoomo Zero", "In Action");
-// const Z898055 = Bike("Z898055", "Zoomo Zero", "Out of Action");
-// const Z898202 = Bike("Z898202", "Zoomo Zero", "In Action");
-// const Z898242 = Bike("Z898242", "Zoomo Zero", "In Action");
-// const Z898281 = Bike("Z898281", "Zoomo Zero", "In Action");
-// const Z898477 = Bike("Z898477", "Zoomo Zero", "In Action");
-// const Z899317 = Bike("Z899317", "Zoomo Zero", "In Action");
-
-// bikes.push(
-//   M900,
-//   Z895456,
-//   Z895488,
-//   Z895490,
-//   Z895493,
-//   Z896360,
-//   Z896699,
-//   Z897530,
-//   Z897531,
-//   Z897556,
-//   Z897643,
-//   Z897677,
-//   Z897798,
-//   Z897832,
-//   Z898055,
-//   Z898202,
-//   Z898242,
-//   Z898281,
-//   Z898477,
-//   Z899317
-// );
-
 function loadBikesPage() {
   resetMainSection();
 
-  // loadBackgroundImage();
   loadAddNewButton();
 
   loadSortingSection();
 
   createPanels();
+
+  if (sortingOption === "status") sortBikesByStatus();
+  else {
+    sortBikesByNumber();
+  }
 
   listAllBikes();
 
@@ -146,14 +108,6 @@ function loadAddNewButton() {
   addNewButton.addEventListener("click", () => addNewBikeModal());
 }
 
-function loadBackgroundImage() {
-  const bikeImage = new Image();
-  bikeImage.src = zoomoBike;
-  bikeImage.id = "bike-image";
-
-  document.querySelector(".content").appendChild(bikeImage);
-}
-
 function loadSortingSection() {
   const sortSelector = document.createElement("div");
   sortSelector.classList.add("sort-selector");
@@ -166,7 +120,80 @@ function loadSortingSection() {
   sortSelector.appendChild(sortBy);
   sortSelector.appendChild(selectionContainer);
 
+  const list = document.createElement("ul");
+  selectionContainer.appendChild(list);
+
+  const arrowIcon = new Image();
+  arrowIcon.src = arrowDown;
+
+  selectionContainer.appendChild(arrowIcon);
+
+  const statusOption = document.createElement("li");
+  statusOption.textContent = "Status";
+  const alphanumericOption = document.createElement("li");
+  alphanumericOption.textContent = "Alphanumeric";
+
+  if (sortingOption == "status") {
+    list.appendChild(statusOption);
+    list.appendChild(alphanumericOption);
+  } else {
+    list.appendChild(alphanumericOption);
+    list.appendChild(statusOption);
+  }
+
   document.querySelector(".content").appendChild(sortSelector);
+
+  selectionContainer.addEventListener("click", () => {
+    if (!sortOptionsOpen) {
+      selectionContainer.style = "height: max-content; overflow: auto;";
+      sortOptionsOpen = true;
+    }
+    // sortBikesByNumber();
+    // reloadAllBikes();
+  });
+
+  arrowIcon.addEventListener("click", (event) => {
+    if (sortOptionsOpen) {
+      selectionContainer.style = "height: 1.2em; overflow: hidden;";
+      sortOptionsOpen = false;
+      event.stopPropagation();
+    }
+  });
+
+  statusOption.addEventListener("click", (event) => {
+    if (sortOptionsOpen) {
+      sortBikesByStatus();
+      reloadAllBikes();
+      selectionContainer.style = "height: 1.2em; overflow: hidden;";
+      sortOptionsOpen = false;
+      const frag = document.createDocumentFragment();
+      frag.appendChild(statusOption);
+      frag.appendChild(alphanumericOption);
+      list.appendChild(frag);
+      sortingOption = "status";
+      event.stopPropagation();
+    }
+  });
+
+  alphanumericOption.addEventListener("click", (event) => {
+    if (sortOptionsOpen) {
+      sortBikesByNumber();
+      reloadAllBikes();
+      selectionContainer.style = "height: 1.2em; overflow: hidden;";
+      sortOptionsOpen = false;
+      const frag = document.createDocumentFragment();
+      frag.appendChild(alphanumericOption);
+      frag.appendChild(statusOption);
+      list.appendChild(frag);
+      sortingOption = "alphanumeric";
+      event.stopPropagation();
+    }
+  });
+}
+
+function reloadAllBikes() {
+  document.querySelector(".bikes-panel").children[0].remove();
+  listAllBikes();
 }
 
 function createPanels() {
@@ -225,8 +252,8 @@ function listAllBikes() {
   document.querySelector(".bikes-panel").appendChild(list);
 }
 
-function importBike(number, model, status, details) {
-  const bike = Bike(number, model, status, details);
+function importBike(number, model, status, details, id) {
+  const bike = Bike(number, model, status, details, id);
   bikes.push(bike);
 }
 
@@ -348,17 +375,34 @@ function handleStatusToggle(bike) {
     toggleImage.src = toggleIconOn;
     document.querySelector(".bike-details-status").textContent = "In Action";
     bike.toggleStatus();
+    updateBikeStatus(bike.id, "In Action");
+    reloadBikeListing(bike);
   } else {
     statusLight.src = redCircle;
     toggleImage.src = toggleIconOff;
     document.querySelector(".bike-details-status").textContent =
       "Out of Action";
     bike.toggleStatus();
+    updateBikeStatus(bike.id, "Out of Action");
+    reloadBikeListing(bike);
+  }
+}
+
+function reloadBikeListing(bike) {
+  const li = document.querySelector(`#bikeListItem-${bike.number}`);
+  const img = li.children[2].children[0];
+  const status = li.children[2].children[1];
+  if (bike.getStatus() === "In Action") {
+    img.src = greenCircle;
+    status.textContent = "In Action";
+  } else {
+    img.src = redCircle;
+    status.textContent = "Out of Action";
   }
 }
 
 // Sort bikes by status (In action on top)
-function sortBikesByStatus(bikesArray) {
+function sortBikesByStatus() {
   let bikesSorted = bikes.sort(function (a, b) {
     if (a.getStatus() < b.getStatus()) {
       return -1;
@@ -368,6 +412,23 @@ function sortBikesByStatus(bikesArray) {
     }
     return 0;
   });
+
+  bikes = bikesSorted;
+}
+
+// Sort bikes by alphanumerical order
+function sortBikesByNumber() {
+  let bikesSorted = bikes.sort(function (a, b) {
+    if (a.number < b.number) {
+      return -1;
+    }
+    if (a.number > b.number) {
+      return 1;
+    }
+    return 0;
+  });
+
+  bikes = bikesSorted;
 }
 
 export { loadBikesPage, bikes, importBike, createBike };

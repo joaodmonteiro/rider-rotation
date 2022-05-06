@@ -6,6 +6,7 @@ import {
   addDoc,
   deleteDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import { riders, importRider, loadRidersPage } from "./riders";
 import { bikes, importBike, loadBikesPage } from "./bikes";
@@ -44,7 +45,8 @@ async function importBikesFromDatabase() {
           doc.data().number,
           doc.data().model,
           doc.data().status,
-          doc.data().details
+          doc.data().details,
+          doc.id
         );
       });
     })
@@ -106,12 +108,25 @@ async function refreshBikes() {
           doc.data().number,
           doc.data().model,
           doc.data().status,
-          doc.data().details
+          doc.data().details,
+          doc.id
         );
       });
       loadBikesPage();
     })
     .catch((err) => console.log(err.message));
+}
+
+function updateBikeStatus(id, newStatus) {
+  const docRef = doc(db, "bikes", id);
+
+  updateDoc(docRef, { status: newStatus });
+}
+
+function updateBikeDetails(id, newDetails) {
+  const docRef = doc(db, "bikes", id);
+
+  updateDoc(docRef, { details: newDetails });
 }
 
 export {
@@ -121,4 +136,6 @@ export {
   saveBike,
   deleteRiderFromDB,
   deleteBikeFromDB,
+  updateBikeStatus,
+  updateBikeDetails,
 };
