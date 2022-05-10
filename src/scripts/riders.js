@@ -14,8 +14,6 @@ import { popUpNotification, addNewRiderModal } from "./DOM";
 const Rider = (name, contract, id) => {
   let onARide = false;
   let onBreak = false;
-  //   let bike = bikeNumber;
-  let detailsShowing = false;
   let breakStartTime;
   let breakEndTime;
   let hadBreak = false;
@@ -24,7 +22,6 @@ const Rider = (name, contract, id) => {
   const isOnARide = () => onARide;
   const isOnBreak = () => onBreak;
   const setOnBreak = (bool) => (onBreak = bool);
-  const areDetailsShowing = () => detailsShowing;
   const toggleOnARide = () => {
     if (onARide) {
       onARide = false;
@@ -41,14 +38,6 @@ const Rider = (name, contract, id) => {
       let time = new Date();
       time.setMinutes(time.getMinutes() + 1);
       setBreakEndTime(time);
-      console.log(breakEndTime);
-    }
-  };
-  const toggleDetails = () => {
-    if (detailsShowing) {
-      detailsShowing = false;
-    } else {
-      detailsShowing = true;
     }
   };
   const setBreakEndTime = (time) => {
@@ -65,12 +54,10 @@ const Rider = (name, contract, id) => {
     setBreakEndTime,
     isOnARide,
     isOnBreak,
-    areDetailsShowing,
     getBreakEndTime,
     getHadBreak,
     toggleOnARide,
     toggleOnBreak,
-    toggleDetails,
   };
 };
 
@@ -188,7 +175,6 @@ function openOptions(rider) {
 
   if (riderOptionsOpen) {
     document.querySelector(".options-container").remove();
-    console.log("remove!!!");
     riderOptionsOpen = "";
   } else {
     const optionsContainer = document.createElement("ul");
@@ -208,7 +194,7 @@ function openOptions(rider) {
         document.querySelector(".options-container").remove();
         riderOptionsOpen = "";
         updateLocalStorage();
-        popUpNotification("Added!");
+        popUpNotification("Added!", 700);
         if (currentPage === "Riders") loadRidersPage();
         else if (currentPage === "Rotation") refreshRiderRotation();
       });
@@ -230,7 +216,7 @@ function openOptions(rider) {
         document.querySelector(".options-container").remove();
         riderOptionsOpen = "";
         updateLocalStorage();
-        popUpNotification("Removed!");
+        popUpNotification("Removed!", 700);
         if (currentPage === "Riders") loadRidersPage();
         else if (currentPage === "Rotation") refreshRiderRotation();
       });
@@ -256,7 +242,7 @@ function openOptions(rider) {
       deleteRider(rider.id);
       document.querySelector(".options-container").remove();
       riderOptionsOpen = "";
-      popUpNotification("Deleted!");
+      popUpNotification("Deleted!", 700);
       if (currentPage === "Riders") loadRidersPage();
       else if (currentPage === "Rotation") refreshRiderRotation();
     });
@@ -267,11 +253,13 @@ function closeOptions() {
   if (riderOptionsOpen) {
     document.querySelector(".options-container").remove();
     riderOptionsOpen = "";
-    console.log("removed");
   }
 }
 
 function loadRidersPage() {
+  // Sort riders alphabetically
+  riders.sort((a, b) => a.name.localeCompare(b.name));
+
   document.querySelector("header").innerHTML = "";
   const pageTitle = document.createElement("h1");
   pageTitle.textContent = "Riders";

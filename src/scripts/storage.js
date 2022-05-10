@@ -88,12 +88,8 @@ function importFromLocalStorage() {
         breakEndTime.getDate() === now.getDate()
       ) {
         let riderOnBreak = riders.find((r) => r.id === id);
-        console.log(typeof id);
         riderOnBreak.hadBreak = true;
-        console.log(riders);
       }
-
-      console.log("break end time " + breakEndTime);
     }
   }
 }

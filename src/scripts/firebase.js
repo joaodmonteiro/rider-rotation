@@ -8,8 +8,18 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import {
+  getAuth,
+  connectAuthEmulator,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 import { riders, importRider, loadRidersPage } from "./riders";
 import { bikes, importBike, loadBikesPage } from "./bikes";
+import { loadApp } from ".";
+import { loadLoginPage } from "./login";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD87hMgZZctPdsIFIz1MPlB0l3J3E9fbb8",
@@ -24,8 +34,16 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
+const auth = getAuth(app);
+
+let loggedIn = false;
+
+// connectAuthEmulator(auth, "http://localhost:9099");
+
 const colRefRiders = collection(db, "riders");
 const colRefBikes = collection(db, "bikes");
+
+monitorAuthState();
 
 async function importRidersFromDatabase() {
   return getDocs(colRefRiders)
@@ -129,6 +147,50 @@ function updateBikeDetails(id, newDetails) {
   updateDoc(docRef, { details: newDetails });
 }
 
+async function createUser(email, password) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    console.log("user created:", userCredential.user);
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+async function loginEmailPassword(email, password) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    console.log("logged In");
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+async function monitorAuthState() {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      if (!loggedIn) {
+        loggedIn = true;
+        loadApp();
+      }
+    } else {
+      loadLoginPage();
+    }
+  });
+}
+
+async function logout() {
+  await signOut(auth);
+  loggedIn = false;
+}
+
 export {
   importRidersFromDatabase,
   importBikesFromDatabase,
@@ -138,4 +200,8 @@ export {
   deleteBikeFromDB,
   updateBikeStatus,
   updateBikeDetails,
+  createUser,
+  loginEmailPassword,
+  monitorAuthState,
+  logout,
 };

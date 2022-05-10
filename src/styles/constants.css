@@ -1,8 +1,8 @@
 :root {
     --fs-vbig: clamp(2rem, 2.4vw, 8rem);
-    --fs-big: clamp(1.4rem, 2vw, 8rem);
-    --fs-normal: clamp(1.2rem, 1.4vw, 5rem);
-    --fs-small: clamp(1rem, 1.1vw, 2rem);
+    --fs-big: clamp(1.4rem, 2vw, 6rem);
+    --fs-normal: clamp(1.2rem, 1.4vw, 1.8rem);
+    --fs-small: clamp(1rem, 1.1vw, 1.4rem);
     --dark-grey: rgba(88, 88, 88, 1);
     --mid-grey: rgba(182, 182, 182, 1);
     --darker-mid-grey: rgba(152, 152, 152, 1);

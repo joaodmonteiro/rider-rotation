@@ -1,71 +1,88 @@
 /* MENU  */
 
 .menu {
-    width: max-content;
-    min-height: 100vh;
-    border-top-right-radius: 1vw;
-    background-color: white;
-    box-shadow: 0 4px 30px 0px rgba(0, 0, 0, 0.05);
-  }
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  height: 100vh;
+  border-top-right-radius: 1vw;
+  background-color: white;
+  box-shadow: 0 4px 30px 0px rgba(0, 0, 0, 0.05);
+}
   
-  .logoContainer {
-    display: grid;
-    place-items: center;
-    padding: 1em;
-    width: 12em;
-  }
-  
-  .logoContainer > img {
-    width: 100%;
-  }
-  
-  .menu > ul {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    margin-top: 1em;
-    max-height: 500px;
-  }
-  
-  .tab-container {
-    display: flex;
-    flex-shrink: 0;
-    margin: 0 1em;
-    padding: .7em 0 .5em 0;
-    align-items: baseline;
-    border-radius: 12px;
-  }
-  
-  .tab-icon-container {
-    display: flex;
-    margin-right: .4em;
-    margin-left: .6em;
-    height: 1.2rem;
-    width: 1.4rem;
-  }
-  
-  .tab-icon {
-    width: 100%;
-    height: auto;
-  }
-  
-  .selected-tab {
-    background-color: rgba(246, 245, 245, 1);
-  }
-  
-  #ridersButtonListItem {
-    flex: 1 0 auto;
-  }
-  
-  .tab-button {
-    color: rgba(88, 88, 88, 1);
-    font-size: 1.8rem;
-    cursor: pointer;
-    margin-right: .6em;
-  }
-  
-  .logo {
-    margin-left: 10px;
-  }
+.logoContainer {
+  display: grid;
+  place-items: center;
+  padding: 1em;
+  width: 12em;
+}
+
+.logoContainer > img {
+  width: 100%;
+}
+
+.menu > ul {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin-top: 1em;
+  max-height: 500px;
+}
+
+.tab-container {
+  display: flex;
+  flex-shrink: 0;
+  margin: 0 1em;
+  padding: .7em 0 .5em 0;
+  align-items: baseline;
+  border-radius: 12px;
+}
+
+.tab-icon-container {
+  display: flex;
+  margin-right: .4em;
+  margin-left: .6em;
+  height: 1.2rem;
+  width: 1.4rem;
+}
+
+.tab-icon {
+  width: 100%;
+  height: auto;
+}
+
+.selected-tab {
+  background-color: rgba(246, 245, 245, 1);
+}
+
+#ridersButtonListItem {
+  flex: 1 0 auto;
+}
+
+.tab-button {
+  color: rgba(88, 88, 88, 1);
+  font-size: 1.8rem;
+  cursor: pointer;
+  margin-right: .6em;
+}
+
+.logo {
+  margin-left: 10px;
+}
+
+.logout-container {
+  display: flex;
+  margin-top: auto;
+  margin-bottom: 2em;
+  align-self: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logout-container > span{
+  color: #585858;
+  margin-left: .4em;
+  font-size: 1.2rem;
+}
   
   /* MENU END */

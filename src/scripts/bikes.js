@@ -61,8 +61,6 @@ function loadBikesPage() {
   }
 
   listAllBikes();
-
-  console.log(bikes);
 }
 
 function createBike(bikeNumber, bikeModel) {

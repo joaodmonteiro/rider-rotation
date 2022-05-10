@@ -3,12 +3,12 @@
 
 .breakTimer {
     position: relative;
-    top: -19px;
-    font-size: .7rem;
+    top: -27px;
+    font-size: .8rem;
   }
   
   .timer-circle {
-    background: -webkit-linear-gradient(left, skyBlue 50%, #eee 50%);
+    background: -webkit-linear-gradient(left, #50A0FF 50%, #eee 50%);
     border-radius: 100%;
     height: calc(var(--size) * 1px);
     width: calc(var(--size) * 1px);
@@ -42,11 +42,11 @@
         -webkit-transform: rotate(-180deg);
     }
     50.01% {
-        background: skyBlue;
+        background: #50A0FF;
         -webkit-transform: rotate(0deg);
     }
     100% {
-        background: skyBlue;
+        background: #50A0FF;
         -webkit-transform: rotate(-180deg);
     }
   }

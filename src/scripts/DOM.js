@@ -1,12 +1,32 @@
 import { createRider } from "../scripts/riders";
 import { createBike } from "../scripts/bikes";
+import x from "../images/x2.svg";
 
-function popUpNotification(message) {
+function popUpNotification(message, time) {
   const popUp = document.createElement("div");
   popUp.classList.add("notification");
   const popUpMessage = document.createElement("div");
   popUpMessage.textContent = message;
   popUp.appendChild(popUpMessage);
+
+  if (time > 5000) {
+    const popUpClose = document.createElement("div");
+    popUpClose.classList.add("popup-close-container");
+    const xIcon = new Image();
+    xIcon.src = x;
+    popUpClose.appendChild(xIcon);
+    popUp.appendChild(popUpClose);
+
+    popUpClose.addEventListener("click", () => {
+      setTimeout(() => {
+        popUp.classList.add("pop-up-opacityOut");
+      }, 0);
+      setTimeout(() => {
+        popUp.remove();
+      }, 300);
+    });
+  }
+
   document.body.appendChild(popUp);
 
   setTimeout(() => {
@@ -15,10 +35,10 @@ function popUpNotification(message) {
   }, 0);
   setTimeout(() => {
     popUp.classList.add("pop-up-opacityOut");
-  }, 700);
+  }, time);
   setTimeout(() => {
     popUp.remove();
-  }, 1000);
+  }, time + 300);
 }
 
 function addNewRiderModal() {

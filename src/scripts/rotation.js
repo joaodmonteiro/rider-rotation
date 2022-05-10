@@ -1,3 +1,4 @@
+import { popUpNotification } from "./DOM";
 import { riders } from "./riders";
 import { updateLocalStorage } from "./storage";
 
@@ -15,16 +16,6 @@ function addRiderToRotation(id) {
 
   refreshRiderRotation();
   // updateLocalStorage();
-
-  console.log("riders:");
-  console.log(riders);
-  console.log("ridersAvailable:");
-  console.log(ridersAvailable);
-  console.log("ridersOnARide:");
-  console.log(ridersOnARide);
-  console.log("ridersOnBreak:");
-  console.log(ridersOnBreak);
-  console.log(localStorage);
 }
 
 function DeleteRiderFromRotation(uniqueID) {
@@ -67,16 +58,6 @@ function StartRide(uniqueID) {
   //Insert rider in on a ride array
   ridersOnARide.push(uniqueID);
 
-  console.log("riders:");
-  console.log(riders);
-  console.log("ridersAvailable:");
-  console.log(ridersAvailable);
-  console.log("ridersOnARide:");
-  console.log(ridersOnARide);
-  console.log("ridersOnBreak:");
-  console.log(ridersOnBreak);
-  console.log(localStorage);
-
   refreshRiderRotation();
 
   updateLocalStorage();
@@ -94,16 +75,6 @@ function EndRide(uniqueID) {
 
   // Insert rider on available array
   ridersAvailable.push(uniqueID);
-
-  console.log("riders:");
-  console.log(riders);
-  console.log("ridersAvailable:");
-  console.log(ridersAvailable);
-  console.log("ridersOnARide:");
-  console.log(ridersOnARide);
-  console.log("ridersOnBreak:");
-  console.log(ridersOnBreak);
-  console.log(localStorage);
 
   refreshRiderRotation();
 
@@ -126,11 +97,6 @@ function GoOnBreak(uniqueID) {
     rider.toggleOnBreak();
 
     ridersOnBreak.push(uniqueID);
-
-    console.log(ridersAvailable);
-    console.log(ridersOnARide);
-    console.log(ridersOnBreak);
-    console.log(rider.isOnBreak());
 
     refreshRiderRotation();
 
@@ -186,9 +152,6 @@ function refreshRiderRotation() {
 
 // Create rider list item
 function listRider(rider, status) {
-  console.log(rider);
-  console.log(status);
-
   let listItem = document.createElement("li");
   listItem.id = `li-${rider.id}`;
 
@@ -263,7 +226,7 @@ function listRider(rider, status) {
 
     let timerCircle = document.createElement("div");
     timerCircle.classList.add("timer-circle");
-    timerCircle.style = `--duration: ${totalSecondsLeft};--size: 30;`;
+    timerCircle.style = `--duration: ${totalSecondsLeft};--size: 40;`;
     let circleMask = document.createElement("div");
     circleMask.classList.add("mask");
 
@@ -315,15 +278,12 @@ function listRider(rider, status) {
 }
 
 function loadRotationPage() {
-  console.log(ridersAvailable);
-  console.log(ridersOnARide);
-  console.log(ridersOnBreak);
-
   document.querySelector("header").innerHTML = "";
   const pageTitle = document.createElement("h1");
   pageTitle.textContent = "Rider Rotation";
   pageTitle.classList.add("pageTitle");
   document.querySelector("header").appendChild(pageTitle);
+
   document.querySelector(".content").remove();
 
   const content = document.createElement("div");
@@ -412,7 +372,7 @@ function updateCountdown(rider) {
   if (minutesLeft <= 1) counter.style.color = "red";
 
   if (minutesLeft <= 0 && secondsLeft <= 0) {
-    alert(`${rider.name} has finished his break!`);
+    popUpNotification(`${rider.name} has finished his break!`, 30000);
     EndBreak(rider.id);
     // clearInterval(intervalFunction);
   }
