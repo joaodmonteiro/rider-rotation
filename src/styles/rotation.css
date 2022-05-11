@@ -1,3 +1,80 @@
+.addToRotation-button {
+  display: flex;
+  width: auto;
+  padding: .8em 1.2em;
+  gap: .5em;
+  border-radius: 8px;
+  font-size: var(--fs-small);
+  align-items: center;
+}
+
+.addToRotation-button > div {
+  white-space: nowrap;
+}
+
+.addToRotation-box-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: white;
+  top: 50%;
+  left: 50%;
+  width: 360px;
+  transform: translate(-50%, -50%) scale(0.5);
+  box-shadow: 0 4px 30px 0px rgba(0, 0, 0, 0.05);
+  border-radius: 18px;
+  padding: 1.4em;
+  opacity: 0;
+  white-space: nowrap;
+  z-index: 3;
+}
+.addToRotation-box-container > h2 {
+  text-align: center;
+  margin-bottom: .8em;
+}
+
+.addToRotation-box-container > label {
+  font-size: var(--fs-small);
+  margin-bottom: .4em;
+}
+
+.modal-rider-list-container {
+  border: 1px solid #E6E6E6;
+  background-color: #F9F9F9;
+  border-radius: 6px;
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.modal-rider-list-container > ul > li {
+  display: flex;
+  align-items: center;
+  gap: .8em;
+  font-size: 1rem;
+  color: #6D6D6D;
+  padding: .2em .4em;
+}
+
+.modal-rider-list-container > ul > li {
+  border-bottom: 1px solid #EAEAEA;
+}
+
+.addToRotation-buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
+}
+
+.addToRotation-buttons-container > * {
+  margin-top: 1em;
+  width: max-content;
+  padding: .3em 1.4em;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
 .contentRotation {
     display: grid;
     grid-template-columns: 50% 50%;

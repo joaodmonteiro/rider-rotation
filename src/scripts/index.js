@@ -189,12 +189,6 @@ function loadMainSection() {
   const title = document.createElement("h1");
   header.appendChild(title);
 
-  const signOutButton = document.createElement("button");
-  signOutButton.textContent = "Sign Out";
-  header.appendChild(signOutButton);
-
-  signOutButton.addEventListener("click", () => logout());
-
   main.appendChild(header);
 
   const content = document.createElement("div");

@@ -1,6 +1,15 @@
 import { createRider } from "../scripts/riders";
 import { createBike } from "../scripts/bikes";
 import x from "../images/x2.svg";
+import { doc } from "firebase/firestore";
+import { getRiders } from "./riders";
+import {
+  refreshRiderRotation,
+  ridersAvailable,
+  ridersOnARide,
+  ridersOnBreak,
+} from "./rotation";
+import { updateLocalStorage } from "./storage";
 
 function popUpNotification(message, time) {
   const popUp = document.createElement("div");
@@ -283,4 +292,125 @@ function addNewBikeModal() {
   });
 }
 
-export { popUpNotification, addNewRiderModal, addNewBikeModal };
+function addToRotationModal() {
+  // Modal
+  const addToRotationModal = document.createElement("div");
+  addToRotationModal.classList.add("modal");
+
+  // Create modal background
+  const addToRotationModalBackground = document.createElement("div");
+  addToRotationModalBackground.classList.add("modal-background");
+  addToRotationModal.appendChild(addToRotationModalBackground);
+
+  document.body.appendChild(addToRotationModal);
+
+  // Create container(box)
+  const addToRotationBoxContainer = document.createElement("form");
+  addToRotationBoxContainer.classList.add("addToRotation-box-container");
+  addToRotationModal.appendChild(addToRotationBoxContainer);
+
+  // Animations
+  setTimeout(() => {
+    addToRotationBoxContainer.classList.add("pop-up-opacityIn");
+    addToRotationBoxContainer.classList.add("pop-up-sizeNormal");
+  }, 0);
+
+  // Title
+  const addToRotationTitle = document.createElement("h2");
+  addToRotationTitle.textContent = "Add to Rotation";
+  addToRotationTitle.style = "white-space: nowrap;";
+  addToRotationBoxContainer.appendChild(addToRotationTitle);
+
+  // Rider list container
+  const listContainer = document.createElement("div");
+  listContainer.classList.add("modal-rider-list-container");
+  addToRotationBoxContainer.appendChild(listContainer);
+
+  //Rider list
+  const riderList = document.createElement("ul");
+  listContainer.appendChild(riderList);
+
+  const riders = getRiders();
+  const ridersNotOnRotation = [];
+
+  riders.forEach((r) => {
+    if (
+      !ridersAvailable.includes(r.id) &&
+      !ridersOnARide.includes(r.id) &&
+      !ridersOnBreak.includes(r.id)
+    ) {
+      ridersNotOnRotation.push(r);
+    }
+  });
+
+  //Create for each Rider
+  ridersNotOnRotation.forEach((rider) => {
+    const listItem = document.createElement("li");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = `checkbox-${rider.id}`;
+    checkbox.classList.add("addToRotation-checkbox");
+    listItem.appendChild(checkbox);
+
+    const label = document.createElement("label");
+    label.textContent = rider.name;
+    label.htmlFor = `checkbox-${rider.id}`;
+    listItem.appendChild(label);
+
+    riderList.appendChild(listItem);
+  });
+
+  // buttons container
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.classList.add("addToRotation-buttons-container");
+
+  addToRotationBoxContainer.appendChild(buttonsContainer);
+
+  // Cancel button
+  const cancelButton = document.createElement("button");
+  cancelButton.textContent = "Cancel";
+  cancelButton.classList.add("secondary-button");
+
+  buttonsContainer.appendChild(cancelButton);
+
+  cancelButton.addEventListener("click", () => addToRotationModal.remove());
+
+  // Add button
+  const addButton = document.createElement("input");
+  addButton.value = "Add";
+  addButton.classList.add("primary-button");
+  addButton.type = "submit";
+
+  buttonsContainer.appendChild(addButton);
+
+  addToRotationBoxContainer.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const checkboxes = document.querySelectorAll(".addToRotation-checkbox");
+
+    checkboxes.forEach((cb) => {
+      if (cb.checked) {
+        const riderId = cb.id.substring(cb.id.indexOf("-") + 1);
+        ridersAvailable.push(riderId);
+      }
+    });
+
+    updateLocalStorage();
+    popUpNotification("Riders added!", 700);
+    refreshRiderRotation();
+
+    addToRotationModal.remove();
+  });
+
+  // Close window if clicked outside
+  addToRotationModalBackground.addEventListener("click", () => {
+    addToRotationModal.remove();
+  });
+}
+
+export {
+  popUpNotification,
+  addNewRiderModal,
+  addNewBikeModal,
+  addToRotationModal,
+};

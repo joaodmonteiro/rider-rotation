@@ -1,6 +1,8 @@
 import { popUpNotification } from "./DOM";
 import { riders } from "./riders";
 import { updateLocalStorage } from "./storage";
+import plusSign from "../images/plus.svg";
+import { addToRotationModal } from "./DOM";
 
 // Array with available riders
 let ridersAvailable = [];
@@ -283,6 +285,22 @@ function loadRotationPage() {
   pageTitle.textContent = "Rider Rotation";
   pageTitle.classList.add("pageTitle");
   document.querySelector("header").appendChild(pageTitle);
+
+  const plus = new Image();
+  plus.src = plusSign;
+  plus.classList.add("plus");
+
+  const addToRotationButton = document.createElement("button");
+  addToRotationButton.classList.add("primary-button");
+  addToRotationButton.classList.add("addToRotation-button");
+  addToRotationButton.appendChild(plus);
+  const addToRotationButtonLabel = document.createElement("div");
+  addToRotationButtonLabel.textContent = "Add to Rotation";
+  addToRotationButton.appendChild(addToRotationButtonLabel);
+  document.querySelector("header").appendChild(addToRotationButton);
+
+  // Click on 'add new' button
+  addToRotationButton.addEventListener("click", () => addToRotationModal());
 
   document.querySelector(".content").remove();
 

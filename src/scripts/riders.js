@@ -36,7 +36,7 @@ const Rider = (name, contract, id) => {
     } else if (!getHadBreak()) {
       setOnBreak(true);
       let time = new Date();
-      time.setMinutes(time.getMinutes() + 1);
+      time.setMinutes(time.getMinutes() + 30);
       setBreakEndTime(time);
     }
   };
@@ -284,6 +284,10 @@ function loadRidersPage() {
   addNewButton.addEventListener("click", () => addNewRiderModal());
 }
 
+function getRiders() {
+  return riders;
+}
+
 export {
   riders,
   createRider,
@@ -292,4 +296,5 @@ export {
   loadRidersPage,
   openOptions,
   closeOptions,
+  getRiders,
 };
