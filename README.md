@@ -8,8 +8,8 @@ Gorillas provides grocery items delivered in less than 15 minutes and it does so
 The deliveries are all made on electric bikes and the Riders deliver the goods by making trips from and to the warehouse.
 So this app was created to be a tool used by the Gorillas warehouse team in order to manage the state of all the riders and bikes.
 
-![Screenshot] (./login-screenshot.png)
-![Screenshot] (./bikes-screenshot.png)
+![Screenshot] (login-screenshot.png)
+![Screenshot] (bikes-screenshot.png)
 
 ## Stack
 
