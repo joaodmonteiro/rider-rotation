@@ -37,10 +37,11 @@ font-stretch: 25% 151%;
 }
 
 *, *:before, *::after {
-  box-sizing: inherit;
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   white-space: nowrap;
+  
 }
 
 html {  
@@ -60,7 +61,7 @@ header {
 }
 
 h1 {
-  color: black;
+  color: var(--vdark-grey);
   font-weight: 350;
 }
 

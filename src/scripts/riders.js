@@ -9,6 +9,7 @@ import {
 import { updateLocalStorage } from "./storage";
 import { currentPage } from ".";
 import { popUpNotification, addNewRiderModal } from "./DOM";
+import optionsIcon from "../images/options-icon.svg";
 
 // Rider Factory Function
 const Rider = (name, contract, id) => {
@@ -17,6 +18,15 @@ const Rider = (name, contract, id) => {
   let breakStartTime;
   let breakEndTime;
   let hadBreak = false;
+  let onRotation = false;
+  const toggleOnRotation = () => {
+    if (!onRotation) {
+      onRotation = true;
+    } else {
+      onRotation = false;
+    }
+  };
+  const isOnRotation = () => onRotation;
   const getHadBreak = () => hadBreak;
   const getBreakEndTime = () => breakEndTime;
   const isOnARide = () => onARide;
@@ -58,6 +68,8 @@ const Rider = (name, contract, id) => {
     getHadBreak,
     toggleOnARide,
     toggleOnBreak,
+    toggleOnRotation,
+    isOnRotation,
   };
 };
 
@@ -144,8 +156,11 @@ function listAllRiders() {
     listItem.appendChild(riderName);
     const options = document.createElement("div");
     options.classList.add("options-button");
-    options.textContent = "...";
     listItem.appendChild(options);
+
+    const optionsImage = new Image();
+    optionsImage.src = optionsIcon;
+    options.appendChild(optionsImage);
 
     options.addEventListener("click", (event) => {
       openOptions(rider);

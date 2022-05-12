@@ -56,9 +56,10 @@
   }
   
   .options-button {
+    display: grid;
+    place-items: center;
     cursor: pointer;
     width: 20px;
-    text-align: center;
   }
   
   .options-container {
@@ -75,6 +76,7 @@
   
   .options-container > li {
     padding: 12px 12px 8px 12px;
+    color: var(--dark-grey);
   }
   
   .options-container > li:hover {

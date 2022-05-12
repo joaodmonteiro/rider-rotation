@@ -114,47 +114,54 @@
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    background-color: rgb(245, 243, 243);
+    /* background-color: rgb(245, 243, 243); */
+    box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.05);
     border-radius: 6px;
     list-style-type: none;
     height: 100%;
     padding:  6px 6px 2px 6px;
     font-size: var(--fs-normal);
-    border: 1px solid rgba(234, 234, 234, 1);
+    border: 1px solid rgba(234, 234, 234, 0.534);
     color: black;
   }
   
   .riderBox {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: ba;
     width: 100%;
     /* padding: 5px; */
     transition: all 1s;
   }
   
-  .riderDetails {
-    /* padding: 5px; */
+  .riderNameBox {
+    max-width: 8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--dark-grey);
   }
-  
+
   .buttonsContainer {
     display: flex;
     justify-content: flex-end;
-    padding-left: 20px;
+    margin-bottom: .2em;
+    margin-left: .4em;
   }
   
   .buttonsContainer > button {
     padding: 2px 5px;
     margin: 0;
     border: transparent;
-    background-color: rgb(245, 243, 243);
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #EAEAEA;
     cursor: pointer;
+    border-radius: 6px;
+    padding: .2em .4em;
+    margin-left: .2em;
+    color: var(--vdark-grey);
+    font-weight: 500;
   }
-  
-  .break {
-    background-image: url(../images/break-icon.svg);
-    background-size: 15px 15px;
-    width: 15px;
-    height: 15px;
-    align-self: baseline;
+
+  .buttonsContainer > button:hover {
+    border: 1px solid #c0c0c0;
   }

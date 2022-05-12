@@ -214,47 +214,47 @@ document.addEventListener("click", (event) => {
 // Insert plus sign
 
 // Input and event listeners
-document.addEventListener("click", function (obj) {
-  // START Button
-  if (obj.target.classList.contains("start")) {
-    // Get Rider ID from button's id
-    let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
+// document.addEventListener("click", function (obj) {
+//   // START Button
+//   if (obj.target.classList.contains("start")) {
+//     // Get Rider ID from button's id
+//     let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
 
-    // Call Start Ride function
-    StartRide(riderID);
-  }
-  // Delete Button
-  else if (obj.target.classList.contains("delete")) {
-    // Get Rider ID from button's id
-    let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
+//     // Call Start Ride function
+//     StartRide(riderID);
+//   }
+//   // Delete Button
+//   else if (obj.target.classList.contains("delete")) {
+//     // Get Rider ID from button's id
+//     let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
 
-    // Call Delete RIder function
-    DeleteRiderFromRotation(riderID);
-  }
-  // Back Button
-  else if (obj.target.classList.contains("back")) {
-    // Get Rider ID from button's id
-    let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
+//     // Call Delete RIder function
+//     DeleteRiderFromRotation(riderID);
+//   }
+//   // Back Button
+//   else if (obj.target.classList.contains("back")) {
+//     // Get Rider ID from button's id
+//     let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
 
-    // Call End Ride function
-    EndRide(riderID);
-  }
-  // Break Button
-  else if (obj.target.classList.contains("break")) {
-    // Get Rider ID from button's id
-    let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
+//     // Call End Ride function
+//     EndRide(riderID);
+//   }
+//   // Break Button
+//   else if (obj.target.classList.contains("break")) {
+//     // Get Rider ID from button's id
+//     let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
 
-    // Call Go On Break function
-    GoOnBreak(riderID);
-  }
-  // Back from break button
-  else if (obj.target.classList.contains("backFromBreak")) {
-    // Get Rider ID from button's id
-    let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
+//     // Call Go On Break function
+//     GoOnBreak(riderID);
+//   }
+//   // Back from break button
+//   else if (obj.target.classList.contains("backFromBreak")) {
+//     // Get Rider ID from button's id
+//     let riderID = obj.target.id.substring(obj.target.id.indexOf("-") + 1);
 
-    // Call End Break function
-    EndBreak(riderID);
-  }
-});
+//     // Call End Break function
+//     EndBreak(riderID);
+//   }
+// });
 
 export { currentPage, loadApp };

@@ -2,6 +2,7 @@ import { popUpNotification } from "./DOM";
 import { riders } from "./riders";
 import { updateLocalStorage } from "./storage";
 import plusSign from "../images/plus.svg";
+import breakIcon from "../images/break-icon.svg";
 import { addToRotationModal } from "./DOM";
 
 // Array with available riders
@@ -15,6 +16,12 @@ let ridersOnBreak = [];
 
 function addRiderToRotation(id) {
   ridersAvailable.push(id);
+
+  let riderOnRotation = riders.find(function (r) {
+    return r.id == id;
+  });
+
+  riderOnRotation.toggleOnRotation();
 
   refreshRiderRotation();
   // updateLocalStorage();
@@ -34,6 +41,8 @@ function DeleteRiderFromRotation(uniqueID) {
   } else {
     ridersAvailable.splice(ridersAvailable.indexOf(uniqueID), 1);
   }
+
+  riderToDelete.toggleOnRotation();
 
   //Refresh rotation
   refreshRiderRotation();
@@ -154,6 +163,10 @@ function refreshRiderRotation() {
 
 // Create rider list item
 function listRider(rider, status) {
+  if (!rider.isOnRotation()) {
+    rider.toggleOnRotation();
+  }
+
   let listItem = document.createElement("li");
   listItem.id = `li-${rider.id}`;
 
@@ -177,9 +190,18 @@ function listRider(rider, status) {
     backButton.textContent = "Back";
     backButton.id = `back-${rider.id}`;
 
+    backButton.addEventListener("click", () => EndRide(rider.id));
+
     let breakButton = document.createElement("button");
     breakButton.classList.add("break");
     breakButton.id = `break-${rider.id}`;
+
+    breakButton.addEventListener("click", () => GoOnBreak(rider.id));
+
+    let breakImage = new Image();
+    breakImage.src = breakIcon;
+    breakButton.appendChild(breakImage);
+
     if (rider.getHadBreak()) breakButton.style.opacity = "0.3";
 
     let deleteButton = document.createElement("button");
@@ -187,6 +209,10 @@ function listRider(rider, status) {
     deleteButton.textContent = "X";
     deleteButton.id = `delete-${rider.id}`;
     deleteButton.style.order = "3";
+
+    deleteButton.addEventListener("click", () =>
+      DeleteRiderFromRotation(rider.id)
+    );
 
     buttonsContainer.appendChild(backButton);
     buttonsContainer.appendChild(breakButton);
@@ -202,16 +228,24 @@ function listRider(rider, status) {
     startButton.textContent = "Go";
     startButton.id = `start-${rider.id}`;
 
+    startButton.addEventListener("click", () => StartRide(rider.id));
+
     let backButton = document.createElement("button");
     backButton.classList.add("backFromBreak");
     backButton.textContent = "Back";
     backButton.id = `breakEnd-${rider.id}`;
+
+    backButton.addEventListener("click", () => EndBreak(rider.id));
 
     let deleteButton = document.createElement("button");
     deleteButton.classList.add("delete");
     deleteButton.textContent = "X";
     deleteButton.id = `delete-${rider.id}`;
     deleteButton.style.order = "3";
+
+    deleteButton.addEventListener("click", () =>
+      DeleteRiderFromRotation(rider.id)
+    );
 
     // Create timer
     let counter = document.createElement("p");
@@ -233,7 +267,9 @@ function listRider(rider, status) {
     circleMask.classList.add("mask");
 
     const breakInterval = setInterval(function () {
-      if (!rider.getHadBreak()) updateCountdown(rider);
+      if (!rider.getHadBreak() && rider.isOnRotation() && rider.isOnBreak()) {
+        updateCountdown(rider);
+      }
     }, 1000);
 
     buttonsContainer.appendChild(startButton);
@@ -255,14 +291,26 @@ function listRider(rider, status) {
     startButton.id = `start-${rider.id}`;
     startButton.textContent = "Go";
 
+    startButton.addEventListener("click", () => StartRide(rider.id));
+
     let breakButton = document.createElement("button");
     breakButton.classList.add("break");
     breakButton.id = `break-${rider.id}`;
+
+    breakButton.addEventListener("click", () => GoOnBreak(rider.id));
+
+    let breakImage = new Image();
+    breakImage.src = breakIcon;
+    breakButton.appendChild(breakImage);
 
     let deleteButton = document.createElement("button");
     deleteButton.classList.add("delete");
     deleteButton.id = `delete-${rider.id}`;
     deleteButton.textContent = "X";
+
+    deleteButton.addEventListener("click", () =>
+      DeleteRiderFromRotation(rider.id)
+    );
 
     if (rider.getHadBreak()) breakButton.style.opacity = "0.3";
 
