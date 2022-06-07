@@ -4,7 +4,7 @@
 
 Rider Rotation is a dashboard web application that I made for Gorillas, a grocery delivery company.
 
-Gorillas provides grocery items delivered in less than 15 minutes and it does so by having multiple warehouses spread around the city from which they deliver.
+Gorillas provides grocery goods delivered in less than 15 minutes and it does so by having multiple warehouses spread around the city from which they deliver.
 The deliveries are all made on electric bikes and the Riders deliver the goods by making trips from and to the warehouse.
 So this app was created to be a tool used by the Gorillas warehouse team in order to manage the state of all the riders and bikes.
 
