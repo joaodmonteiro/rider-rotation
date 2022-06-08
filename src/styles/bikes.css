@@ -113,6 +113,7 @@
   justify-self: flex-end;
   align-self: flex-start;
   margin-bottom: 1.4em;
+  cursor: pointer;
 }
 
 .status-light {
@@ -152,24 +153,28 @@
 .bike-details-detailsTitleContainer {
   display: flex;
   align-items: center;
-  gap: 1em;
+  gap: .6em;
 }
 
 .bike-details-detailsLabel {
   font-size: var(--fs-normal);
-  color: var(--mid-grey);
+  color: var(--dark-grey);
+  font-weight: 400;
 }
 
 .bike-details-detailsEditButton {
+  display: flex;
+  align-items: center;
   cursor: pointer;
   font-size: var(--fs-small);
-  color: var(--accent-blue);
+  color: var(--dark-grey);
 }
 
 .bike-details-details {
   font-size: var(--fs-small);
-  color: var(--dark-grey);
+  color: var(--darker-mid-grey);
   margin-top: 1em;
+  font-weight: 400;
 }
 
 .edit-details-container {

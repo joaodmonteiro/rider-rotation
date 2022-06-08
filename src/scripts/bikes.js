@@ -10,6 +10,7 @@ import {
   updateBikeStatus,
 } from "../scripts/firebase";
 import arrowDown from "../images/arrow-down.svg";
+import edit from "../images/edit.svg";
 
 // Array for bikes
 let bikes = [];
@@ -18,6 +19,7 @@ let detailsPanelOpen = "";
 let panelAnimationRunning = false;
 let sortOptionsOpen = false;
 let sortingOption = "status";
+let detailEditOpen = false;
 
 // Bike Factory Function
 const Bike = (number, model, status, details, id) => {
@@ -351,12 +353,17 @@ function loadDetails(bike) {
   bikeDetailsTitleContainer.appendChild(bikeDetailsLabel);
 
   const detailsEditButton = document.createElement("div");
-  detailsEditButton.textContent = "Edit";
   detailsEditButton.classList.add("bike-details-detailsEditButton");
 
-  detailsEditButton.addEventListener("click", () =>
-    handleDetailsEditButton(bike)
-  );
+  const editButtonImage = new Image();
+  editButtonImage.src = edit;
+  detailsEditButton.appendChild(editButtonImage);
+
+  detailsEditButton.addEventListener("click", () => {
+    if (!detailEditOpen) {
+      handleDetailsEditButton(bike);
+    }
+  });
 
   bikeDetailsTitleContainer.appendChild(detailsEditButton);
 
@@ -449,6 +456,8 @@ function sortBikesByNumber() {
 }
 
 function handleDetailsEditButton(bike) {
+  detailEditOpen = true;
+
   const detailsElement = document.querySelector(".bike-details-details");
   const details = detailsElement.textContent;
 
@@ -464,7 +473,7 @@ function handleDetailsEditButton(bike) {
   cancelButton.classList.add("secondary-button");
 
   const submitButton = document.createElement("button");
-  submitButton.textContent = "Submit";
+  submitButton.textContent = "Confirm";
   submitButton.classList.add("primary-button");
 
   buttonsContainer.appendChild(cancelButton);
@@ -488,6 +497,7 @@ function handleDetailsEditButton(bike) {
 
     const detailsContainer = document.querySelector(".details-container");
     detailsContainer.appendChild(oldDetailsElement);
+    detailEditOpen = false;
   });
 
   submitButton.addEventListener("click", () => {
@@ -501,6 +511,7 @@ function handleDetailsEditButton(bike) {
 
     const detailsContainer = document.querySelector(".details-container");
     detailsContainer.appendChild(newDetailsElement);
+    detailEditOpen = false;
   });
 
   detailsSection.appendChild(editDetailsContainer);
