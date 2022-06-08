@@ -4,7 +4,11 @@ import greenCircle from "../images/green-circle.svg";
 import redCircle from "../images/red-circle.svg";
 import plusSign from "../images/plus.svg";
 import { addNewBikeModal } from "../scripts/DOM";
-import { saveBike, updateBikeStatus } from "../scripts/firebase";
+import {
+  saveBike,
+  updateBikeDetails,
+  updateBikeStatus,
+} from "../scripts/firebase";
 import arrowDown from "../images/arrow-down.svg";
 
 // Array for bikes
@@ -337,16 +341,31 @@ function loadDetails(bike) {
   bikeDetails.textContent = bike.getDetails();
   bikeDetails.classList.add("bike-details-details");
 
+  const bikeDetailsTitleContainer = document.createElement("div");
+  bikeDetailsTitleContainer.classList.add("bike-details-detailsTitleContainer");
+
   const bikeDetailsLabel = document.createElement("h2");
   bikeDetailsLabel.textContent = "Details";
   bikeDetailsLabel.classList.add("bike-details-detailsLabel");
+
+  bikeDetailsTitleContainer.appendChild(bikeDetailsLabel);
+
+  const detailsEditButton = document.createElement("div");
+  detailsEditButton.textContent = "Edit";
+  detailsEditButton.classList.add("bike-details-detailsEditButton");
+
+  detailsEditButton.addEventListener("click", () =>
+    handleDetailsEditButton(bike)
+  );
+
+  bikeDetailsTitleContainer.appendChild(detailsEditButton);
 
   statusContainer.appendChild(toggleIcon);
   statusContainer.appendChild(statusLight);
   statusContainer.appendChild(bikeStatus);
   modelAndNumberContainer.appendChild(bikeModel);
   modelAndNumberContainer.appendChild(bikeNumber);
-  detailsContainer.appendChild(bikeDetailsLabel);
+  detailsContainer.appendChild(bikeDetailsTitleContainer);
   detailsContainer.appendChild(bikeDetails);
 
   detailsPanel.appendChild(modelAndNumberContainer);
@@ -427,6 +446,64 @@ function sortBikesByNumber() {
   });
 
   bikes = bikesSorted;
+}
+
+function handleDetailsEditButton(bike) {
+  const detailsElement = document.querySelector(".bike-details-details");
+  const details = detailsElement.textContent;
+
+  const inputText = document.createElement("input");
+  inputText.type = "text";
+  inputText.value = details;
+
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.classList.add("edit-details-buttons-container");
+
+  const cancelButton = document.createElement("button");
+  cancelButton.textContent = "Cancel";
+  cancelButton.classList.add("secondary-button");
+
+  const submitButton = document.createElement("button");
+  submitButton.textContent = "Submit";
+  submitButton.classList.add("primary-button");
+
+  buttonsContainer.appendChild(cancelButton);
+  buttonsContainer.appendChild(submitButton);
+
+  const detailsSection = detailsElement.parentElement;
+
+  detailsElement.remove();
+
+  const editDetailsContainer = document.createElement("div");
+  editDetailsContainer.classList.add("edit-details-container");
+  editDetailsContainer.appendChild(inputText);
+
+  editDetailsContainer.appendChild(buttonsContainer);
+
+  cancelButton.addEventListener("click", () => {
+    const oldDetailsElement = document.createElement("p");
+    oldDetailsElement.classList.add("bike-details-details");
+    oldDetailsElement.textContent = bike.getDetails();
+    editDetailsContainer.remove();
+
+    const detailsContainer = document.querySelector(".details-container");
+    detailsContainer.appendChild(oldDetailsElement);
+  });
+
+  submitButton.addEventListener("click", () => {
+    updateBikeDetails(bike.id, inputText.value);
+    bike.changeDetails(inputText.value);
+
+    const newDetailsElement = document.createElement("p");
+    newDetailsElement.classList.add("bike-details-details");
+    newDetailsElement.textContent = inputText.value;
+    editDetailsContainer.remove();
+
+    const detailsContainer = document.querySelector(".details-container");
+    detailsContainer.appendChild(newDetailsElement);
+  });
+
+  detailsSection.appendChild(editDetailsContainer);
 }
 
 export { loadBikesPage, bikes, importBike, createBike };

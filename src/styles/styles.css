@@ -91,6 +91,8 @@ input[type='name'], input[type='text'], input[type='email'], input[type='passwor
   height: 2.4em;
   border-radius: 6px;
   padding: 0 .4em;
+  font-family: 'Rubik';
+  font-size: var(--fs-small);
 }
 
 button{

@@ -149,14 +149,45 @@
   color: var(--dark-grey);
 }
 
+.bike-details-detailsTitleContainer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
 .bike-details-detailsLabel {
   font-size: var(--fs-normal);
   color: var(--mid-grey);
 }
 
+.bike-details-detailsEditButton {
+  cursor: pointer;
+  font-size: var(--fs-small);
+  color: var(--accent-blue);
+}
+
 .bike-details-details {
   font-size: var(--fs-small);
   color: var(--dark-grey);
+  margin-top: 1em;
+}
+
+.edit-details-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+}
+
+.edit-details-buttons-container {
+  display: flex;
+  gap: .5em;
+  align-self: flex-end;
+  margin-top: .5em;
+}
+
+.edit-details-buttons-container > button {
+  width: max-content;
+  
 }
 
 .panel-open {
