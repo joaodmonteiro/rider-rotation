@@ -77,16 +77,12 @@ function importFromLocalStorage() {
       if (breakEndTime > now) {
         let riderOnBreak = riders.find((r) => r.id === id);
 
-        riderOnBreak.onBreak = true;
+        riderOnBreak.toggleOnBreak();
         riderOnBreak.hadBreak = true;
         riderOnBreak.setBreakEndTime(breakEndTime);
 
         ridersOnBreak.push(id);
-      } else if (
-        breakEndTime.getFullYear() === now.getFullYear() &&
-        breakEndTime.getMonth() === now.getMonth() &&
-        breakEndTime.getDate() === now.getDate()
-      ) {
+      } else {
         let riderOnBreak = riders.find((r) => r.id === id);
         riderOnBreak.hadBreak = true;
       }

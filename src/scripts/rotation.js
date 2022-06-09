@@ -267,6 +267,7 @@ function listRider(rider, status) {
     circleMask.classList.add("mask");
 
     const breakInterval = setInterval(function () {
+      console.log(rider.isOnBreak());
       if (!rider.getHadBreak() && rider.isOnRotation() && rider.isOnBreak()) {
         updateCountdown(rider);
       }
