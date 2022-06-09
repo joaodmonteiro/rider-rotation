@@ -67,22 +67,37 @@ function loadLoginPage() {
   loginButton.classList.add("primary-button");
   formContainer.appendChild(loginButton);
 
-  const signUpCTA = document.createElement("p");
-  signUpCTA.classList.add("login-cta");
-  signUpCTA.textContent = `Don't have an account yet?`;
-  formContainer.appendChild(signUpCTA);
-
-  const signUpButton = document.createElement("button");
-  signUpButton.textContent = "Sign Up";
-  signUpButton.classList.add("secondary-button");
-  formContainer.appendChild(signUpButton);
-
   formContainer.addEventListener("submit", (e) => {
     e.preventDefault();
     loginEmailPassword(formContainer.email.value, formContainer.password.value);
   });
 
-  signUpButton.addEventListener("click", () => loadSignUpPage());
+  const demoAccLabel = document.createElement("p");
+  demoAccLabel.classList.add("login-cta");
+  demoAccLabel.textContent = `Don't have an account? That's ok :)`;
+  formContainer.appendChild(demoAccLabel);
+
+  const demoAccButton = document.createElement("button");
+  demoAccButton.textContent = "Demo Login";
+  demoAccButton.classList.add("secondary-button");
+  formContainer.appendChild(demoAccButton);
+
+  demoAccButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    loginEmailPassword("test@test.com", "test123");
+  });
+
+  // const signUpCTA = document.createElement("p");
+  // signUpCTA.classList.add("login-cta");
+  // signUpCTA.textContent = `Don't have an account yet?`;
+  // formContainer.appendChild(signUpCTA);
+
+  // const signUpButton = document.createElement("button");
+  // signUpButton.textContent = "Sign Up";
+  // signUpButton.classList.add("secondary-button");
+  // formContainer.appendChild(signUpButton);
+
+  // signUpButton.addEventListener("click", () => loadSignUpPage());
 }
 
 function handleLoginButton() {}

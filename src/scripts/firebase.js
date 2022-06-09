@@ -167,7 +167,7 @@ async function loginEmailPassword(email, password) {
       email,
       password
     );
-    console.log("logged In");
+    console.log(userCredential);
   } catch (err) {
     console.log(err.message);
   }
