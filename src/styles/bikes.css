@@ -131,6 +131,7 @@
 .details-container {
   grid-column: 1 / 3;
   margin-top: 2em;
+  margin-bottom: 1em;
 }
 
 .bike-details-status {
@@ -193,6 +194,23 @@
 .edit-details-buttons-container > button {
   width: max-content;
   
+}
+
+.details-delete-container {
+  margin-left: auto;
+  width: max-content;
+  grid-column: 2 / 3;
+  cursor: pointer;
+  display: flex;
+  gap: .5em;
+}
+.details-delete-container > img {
+  height: var(--fs-small);
+}
+
+.details-delete-container > div {
+  color: #EA504B;
+  font-size: var(--fs-small);
 }
 
 .panel-open {

@@ -1,5 +1,5 @@
 import { createRider } from "../scripts/riders";
-import { createBike } from "../scripts/bikes";
+import { createBike, deleteBike } from "../scripts/bikes";
 import x from "../images/x2.svg";
 import { doc } from "firebase/firestore";
 import { getRiders } from "./riders";
@@ -10,6 +10,7 @@ import {
   ridersOnBreak,
 } from "./rotation";
 import { updateLocalStorage } from "./storage";
+import { deleteBikeFromDB } from "./firebase";
 
 function popUpNotification(message, time) {
   const popUp = document.createElement("div");
@@ -408,9 +409,69 @@ function addToRotationModal() {
   });
 }
 
+function deleteConfirmation(type, object) {
+  // Modal
+  const deleteConfirmationModal = document.createElement("div");
+  deleteConfirmationModal.classList.add("modal");
+
+  // Create modal background
+  const background = document.createElement("div");
+  background.classList.add("modal-background");
+  deleteConfirmationModal.appendChild(background);
+
+  document.body.appendChild(deleteConfirmationModal);
+
+  // Create container(box)
+  const boxContainer = document.createElement("div");
+  boxContainer.classList.add("deleteConfirmation-box-container");
+  deleteConfirmationModal.appendChild(boxContainer);
+
+  // Animations
+  setTimeout(() => {
+    boxContainer.classList.add("pop-up-opacityIn");
+    boxContainer.classList.add("pop-up-sizeNormal");
+  }, 0);
+
+  const message = document.createElement("p");
+  message.textContent = `Are you sure you want to delete this ${type}?`;
+
+  const noButton = document.createElement("button");
+  noButton.classList.add("secondary-button");
+  noButton.textContent = "Cancel";
+
+  const yesButton = document.createElement("button");
+  yesButton.classList.add("primary-button");
+  yesButton.textContent = "Delete";
+
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.classList.add("buttons-container");
+  buttonsContainer.appendChild(noButton);
+  buttonsContainer.appendChild(yesButton);
+
+  boxContainer.appendChild(message);
+  boxContainer.appendChild(buttonsContainer);
+
+  // Close window if clicked outside
+  background.addEventListener("click", () => {
+    deleteConfirmationModal.remove();
+  });
+
+  if (type === "bike") {
+    yesButton.addEventListener("click", () => {
+      deleteBike(object);
+      deleteConfirmationModal.remove();
+    });
+
+    noButton.addEventListener("click", () => {
+      deleteConfirmationModal.remove();
+    });
+  }
+}
+
 export {
   popUpNotification,
   addNewRiderModal,
   addNewBikeModal,
   addToRotationModal,
+  deleteConfirmation,
 };

@@ -3,14 +3,16 @@ import toggleIconOff from "../images/toggle-icon-off.svg";
 import greenCircle from "../images/green-circle.svg";
 import redCircle from "../images/red-circle.svg";
 import plusSign from "../images/plus.svg";
-import { addNewBikeModal } from "../scripts/DOM";
+import { addNewBikeModal, deleteConfirmation } from "../scripts/DOM";
 import {
+  deleteBikeFromDB,
   saveBike,
   updateBikeDetails,
   updateBikeStatus,
 } from "../scripts/firebase";
 import arrowDown from "../images/arrow-down.svg";
 import edit from "../images/edit.svg";
+import deleteIcon from "../images/delete_icon.svg";
 
 // Array for bikes
 let bikes = [];
@@ -80,6 +82,13 @@ function createBike(bikeNumber, bikeModel) {
     newBike.getStatus(),
     newBike.getDetails()
   );
+}
+
+function deleteBike(bike) {
+  bikes.splice(bikes.indexOf(bike), 1);
+  deleteBikeFromDB(bike.id);
+  closeDetailsPanel();
+  reloadAllBikes();
 }
 
 function resetMainSection() {
@@ -367,6 +376,19 @@ function loadDetails(bike) {
 
   bikeDetailsTitleContainer.appendChild(detailsEditButton);
 
+  const deleteContainer = document.createElement("div");
+  deleteContainer.classList.add("details-delete-container");
+
+  const deleteImage = new Image();
+  deleteImage.src = deleteIcon;
+  deleteContainer.appendChild(deleteImage);
+
+  const deleteLabel = document.createElement("div");
+  deleteLabel.textContent = "Delete";
+  deleteContainer.appendChild(deleteLabel);
+
+  deleteContainer.addEventListener("click", () => handleDeleteBike(bike));
+
   statusContainer.appendChild(toggleIcon);
   statusContainer.appendChild(statusLight);
   statusContainer.appendChild(bikeStatus);
@@ -378,6 +400,7 @@ function loadDetails(bike) {
   detailsPanel.appendChild(modelAndNumberContainer);
   detailsPanel.appendChild(statusContainer);
   detailsPanel.appendChild(detailsContainer);
+  detailsPanel.appendChild(deleteContainer);
 }
 
 function closeDetailsPanel() {
@@ -517,4 +540,9 @@ function handleDetailsEditButton(bike) {
   detailsSection.appendChild(editDetailsContainer);
 }
 
-export { loadBikesPage, bikes, importBike, createBike };
+function handleDeleteBike(bike) {
+  // create modal to confirm if user wants to delete bike
+  deleteConfirmation("bike", bike);
+}
+
+export { loadBikesPage, bikes, importBike, createBike, deleteBike };
