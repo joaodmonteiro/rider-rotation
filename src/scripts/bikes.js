@@ -55,6 +55,8 @@ const Bike = (number, model, status, details, id) => {
 };
 
 function loadBikesPage() {
+  detailEditOpen = false;
+
   resetMainSection();
 
   loadAddNewButton();
@@ -298,6 +300,8 @@ function changeSelectedBike(bike) {
 function openDetailsPanel(bike) {
   const detailsPanel = document.querySelector(".details-panel");
 
+  detailEditOpen = false;
+
   detailsPanel.style = "display: grid";
 
   setTimeout(() => detailsPanel.classList.add("panel-open"), 0);
@@ -369,6 +373,7 @@ function loadDetails(bike) {
   detailsEditButton.appendChild(editButtonImage);
 
   detailsEditButton.addEventListener("click", () => {
+    console.log(detailEditOpen);
     if (!detailEditOpen) {
       handleDetailsEditButton(bike);
     }
